@@ -16,7 +16,7 @@
 </table>
 
 ## Lecture & Materials
-- **DB : 데이터베이스의 원리와 응용 - [KOCW 백현미] / 데이터베이스 개론 [김연희] << 진행중 ** 
+- **DB : 데이터베이스의 원리와 응용 - [KOCW 백현미] / 데이터베이스 개론 [김연희] <<진행중** 
 - Network : 컴퓨터네트워크 - [KOCW 이석복] / 컴퓨터 네트워킹 하향식 접근 [James F. Kurose , Keith W.Ross]
   
 ## Learning Objectives
