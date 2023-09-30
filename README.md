@@ -1,6 +1,6 @@
 # CS_Study_CSKL
 ## CSKL
-- Computer Science Kalamari Laboratory <br>
+- Computer Science Kalamari's Laboratory <br>
   <img src="https://github.com/youngkimi/CS_Study_CSKL/assets/139294219/6633abd6-3790-4c7f-9c2e-102111ec27d1" width="30%">
 
 ## MEMBER
