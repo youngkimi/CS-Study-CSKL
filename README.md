@@ -1,6 +1,7 @@
 # CS_Study_CSKL
 ## CSKL
-- Computer Science Kalamari Laboratory
+- Computer Science Kalamari Laboratory <br>
+  <img src="https://github.com/youngkimi/CS_Study_CSKL/assets/139294219/6633abd6-3790-4c7f-9c2e-102111ec27d1" width="30%">
 
 ## MEMBER
 - Cho hyun-soo / Seok ji-myung / Kim youngseop / Lee seung-heon
@@ -13,4 +14,17 @@
     <td align="center"><a href="https://github.com/heon118"><img src="https://github.com/heon118.png" width="100px;" alt=""/><br /.png><sub><b>heon118</b></sub></a><br /></td>
   </tr>
 </table>
+
+## Lecture & Materials
+- **DB : 데이터베이스의 원리와 응용 - [KOCW 백현미] / 데이터베이스 개론 [김연희]**
+- Network : 컴퓨터네트워크 - [KOCW 이석복] / 컴퓨터 네트워킹 하향식 접근 [James F. Kurose , Keith W.Ross]
   
+## Learning Objectives
+- **알고리즘만 풀 줄 아는 인간**이 되지 않기 위함.
+- 나태함을 이겨내기 위한 상호 감시와 견제 및 동기 부여.
+- Computer Science 지식 쌓기.
+
+## Study Rules
+- 긴급한 예외 상황이 아닌 한, 일방적인 스터디 불참 및 지각은 태형으로 다스림.
+- 불참해야 하는 경우, 스터디 당일 오전까지 전파 후 나머지 스터디원의 동의를 구할 것.
+- ~~그냥 지각하면 커피 사~~
