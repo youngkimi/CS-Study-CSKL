@@ -135,6 +135,73 @@ class Person {
 
 # SPRING MVC
 
+#### 1️⃣ 스프링 MVC란, (A), (B), (C)의 약자로 (D)를 기반으로 어플리케이션을 개발할 때 사용하는 디자인 패턴이다. A, B, C, D의 알맞은 말은?
+
+#### 2️⃣ 스프링 MVC의 동작 과정을 순서대로 쓰시오.
+```
+a. 클라이언트 요청이 들어오면 DispatcherServlet이 받는다.
+b. DispatcherServlet은 Controller에 요청을 전달
+c. DispatcherServlet은 View가 만들어낸 결과를 응답
+d. 결과(요청처리를 위한 data, 결과를 보여줄 view의 이름)를 ModelAndView에 담아 반환
+e. HandlerMapping이 어떤 Controller가 요청을 처리할지 결정한다.
+f. Controller는 요청을 처리한다.
+g. 결과를 처리할 View에 ModelAndView를 전달
+h. ViewResolver에 의해서 실제 결과를 처리할 View를 결정하고 반환
+```
+
+#### 3️⃣ MVC 설정에 대해 옳바르지 않은 것은?
+1. Controller는 Annotation 방식으로 bean을 등록하기 위해서 component-scan을 설정한다.
+2. ViewResolver는 servlet-context.xml에 설정해야한다.
+3. root-context.xml에는 Service, DAO 등의 bean을 포함한다.
+4. handler mapping은 별도의 등록없이 사용가능하다.
+5. 정답없음
+
+#### 4️⃣ 다음 코드의 실행 결과로 test.jsp에 id와 pw를 첫째줄에 id의 값 두번째 줄에 pw의 값을 출력할때 알맞은 것은?
+url 정보
+```
+~/test?id=&pw=2
+```
+```
+@GetMapping("test")
+public String test1(Model model, @RequestParam(value="myid")Stirng id, String pw){
+    model.addAttribute("id", id);
+    model.addAttribute("pw", pw);
+    return "test";
+}
+```
+1. 2
+2.  
+   2
+3. null
+   2
+4. 에러 발생
+
+#### 5️⃣ 다음 코드의 실행 결과로 test.jsp에 id와 pw를 첫째줄에 id의 값 두번째 줄에 pw의 값을 출력할때 알맞은 것은?
+url 정보
+```
+~/test?id=&pw=2
+```
+```
+@GetMapping("test")
+public String test1(Model model, Stirng id, String pw){
+    model.addAttribute("id", id);
+    model.addAttribute("pw", pw);
+    return "test";
+}
+```
+1. 2
+2.  
+   2
+3. null
+   2
+4. 에러 발생
+
+#### 6️⃣ 
+#### 7️⃣
+#### 8️⃣
+#### 9️⃣
+#### 🔟
+
 # SPRING Interceptor (1)
 
 ### 1️⃣ Dispatcher Servlet의 역할은 ?
