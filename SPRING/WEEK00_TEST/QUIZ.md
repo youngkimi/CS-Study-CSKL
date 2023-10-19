@@ -106,6 +106,31 @@ class Person {
 
 # SPRING AOP
 
+#### 1️⃣ Spring AOP에 대한 설명으로 옳지 않은 것은?
+    1. Spring AOP를 통해 실제 기능이 구현된 Target 객체를 호출하려고 하면, Target 객체가 호출되지 않는다.
+    2. Spring AOP에서 Join Point는 일반적으로 메서드 실행시점이다.
+    3. Spring AOP는 인터페이스를 구현한 클래스가 아닌 경우에는 CGLIB 프록시를 통해서 구현할 수 있다.
+    4. Spring AOP를 구현하기 위해서는 AspectJ 라이브러리를 사용하여야 한다.
+    5. Spring AOP는 일반적으로 런타임 시에 위빙을 수행한다.
+
+
+#### 3️⃣ com.xyz.service package 또는 그 하위 패키지에 선언된 모든 메서드를 실행하는 PointCut Expression으로 알맞은 것은?
+    1. execution(public * *(..))
+    2. execution(* set*(..))
+    3. execution(* com.xyz.service.\*.\*(..))
+    4. execution(* com.xyz.service..\*.\*(..))
+    5. within(com.xyz.service.*)
+    6. execution(* com.xyz.service.MovieService.*(..))
+
+#### 4️⃣ AOP(관점 지향 프로그래밍)가 어떤 영어 단어의 약어인지 쓰고, AOP의 특징에 대해 서술하시오.
+
+#### 5️⃣ 다음은 Spring AOP의 Advice 타입에 관한 설명이다. 옳지 않은 것의 개수를 구하시오.
+    - after : target메서드 정상 동작 이후에 실행된다.
+    - after returning : 타입이 target메서드의 반환형과 같아야 한다.
+    - after throwing : 에러가 발생하면 수행되는 메서드이므로 타입은 Exception이여야 한다.
+    - around : target메서드의 실행 시점, 방법, 여부를 모두 결정할 수 있으므로 다른 advice 타입들을 모두 대체할 수 있다.
+
+
 # SPRING MVC
 
 # SPRING Interceptor (1)
