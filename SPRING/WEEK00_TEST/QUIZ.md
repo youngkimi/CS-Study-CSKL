@@ -113,6 +113,7 @@ class Person {
     4. Spring AOP를 구현하기 위해서는 AspectJ 라이브러리를 사용하여야 한다.
     5. Spring AOP는 일반적으로 런타임 시에 위빙을 수행한다.
 
+#### 2️⃣ Spring AOP에서 Advice 타입은 5가지가 존재한다. 5가지의 Advice 타입을 쓰고, 각 타입이 어느 시점에서 적용되는지 작성하시오.
 
 #### 3️⃣ com.xyz.service package 또는 그 하위 패키지에 선언된 모든 메서드를 실행하는 PointCut Expression으로 알맞은 것은?
     1. execution(public * *(..))
