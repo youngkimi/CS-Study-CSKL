@@ -314,6 +314,184 @@ HandlerInterceptor[인터페이스]를 구현한 것(또는 HandlerInterceptorAd
   ```
 
 # SPRING Interceptor (2)
+### 💡 선행 개념
+- Servlet Container(웹컨테이너)
+    - 서버에 만들어진 서블릿은 스스로 작동하는게 아니라 관리를 통해 생성, 소멸됨.
+    - 웹서버와 서블릿이 상호작용할 수 있게 해주는 역할.
+    - Tomcat(웹서버와 소켓을 만들어 통신하며 JSP와 Servlet이 작동할 수 있는 환경 제공)
+
+- Dispatcher-Servlet(디스패처 서블릿)
+    - HTTP 프로토콜로 들어오는 모든 요청을 가장 먼저 받아 적합한 컨트롤러에 뿌려주는 프론트 컨트롤러
+    - 기능이나 객체별로 컨트롤러를 여러개 만들어놨다면 이 프론트컨트롤러가 공통코드들은 지가 처리하고 서로 다른 코드들만 각 요청에 맞는 컨트롤러를 찾아 호출시켜 처리한다 이말이야.
+    - 프론트 컨트롤러 = 디스패처 서블릿
+
+
+### ❓ Listener & Filter <br/>
+- Listener
+    - 특정 이벤트가 발생하기를 기다리다 실행되는 객체
+        (ex. 버튼클릭, 키보드 입력, 웹 어플리케이션 시작 등)
+    - 이벤트 소스 : 이벤트 발생 근원지(객체)
+
+    A. annotation 방식
+    ```java
+    @WebListener
+    public class MyListener implements ServletContextListener {
+
+
+        public MyListener() {}
+
+        public void contextDestroyed(ServletContextEvent sce)  { 
+    	    System.out.println("웹어플리케이션이 종료가 될때 호출 될 친구");
+        }
+
+        public void contextInitialized(ServletContextEvent sce)  { 
+    	    System.out.println("웹어플리케이션이 시작될때 호출 될 친구");
+        }
+    }
+    ```
+
+    B. web.xml 방식<br>
+    
+    ```xml
+    <listener>
+  	    <listener-class>com.ssafy.mvc.MyListener</listener-class>
+    </listener>
+    ```
+
+    ```java
+    public class MyListener implements ServletContextListener {
+        public void contextDestroyed(ServletContextEvent sce)  { 
+    	    System.out.println("웹어플리케이션이 종료가 될때 호출 될 친구2");
+        }
+    
+        public void contextInitialized(ServletContextEvent sce)  { 
+    	    System.out.println("웹어플리케이션이 시작될때 호출 될 친구2");
+        }
+    }
+    ```
+
+
+- Filter
+    - Filter란
+        - 디스패처 서블릿에 요청 전달 전/후 모든 요청과 응답 데이터를 필터링하여 제어, 변경 가능
+        - 사용자의 요청이 Servlet에 전달되어지기 전에 Filter를 거침
+        - Servlet으로부터 응답이 사용자에게 전달되어지기 전에 Filter를 거침
+        - FilterChain을 통해 연쇄적으로 동작 가능
+        - 디스패처 서블릿이 있는 스프링컨테이너가 아닌 톰캣과 같은 서블릿 컨테이너(웹컨테이너)에 의해 관리
+        - 어노테이션(@WebFilter) 방식은 순서를 조정하기 어려워 선호하지 않음.
+
+    - web.xml 설정
+    ```xml
+    <filter>
+  	    <filter-name>MyFilter</filter-name>
+  	    <filter-class>com.ssafy.mvc.MyFilter</filter-class>
+  	    <init-param>
+  		    <param-name>encoding</param-name>
+  		    <param-value>UTF-8</param-value>
+  	    </init-param>
+    </filter>
+ 
+    <filter-mapping>
+ 	    <filter-name>MyFilter</filter-name>
+ 	    <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+    
+    ```
+    - Filter 메서드
+        - init : filter 객체 초기화 및 서비스에 추가. init 메서드 호출하여 필터 객체 초기화 이후 요청들은 doFilter
+
+        - doFilter : 필요한 처리 과정을 넣어 원하는 처리 진행
+
+        - destroy : filter 객체 서비스에서 제거, 사용 자원 반환. 1번 호출되며 이후 doFilter의해 처리x
+
+        ```java
+        public class MyFilter implements Filter {
+
+	        public FilterConfig filterConfig;
+	
+            public MyFilter() {}
+
+            //필터 초기화
+            public void init(FilterConfig fConfig) throws ServletException {
+    	        filterConfig = fConfig;
+            }
+            //필터 종료
+	        public void destroy() {}
+
+	        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {	
+		        // chain.doFilter 이전에 코드를 작성하면 
+		        System.out.println("서블릿 동작 이전에 할것");
+		        String encoding = this.filterConfig.getInitParameter("encoding");
+		        request.setCharacterEncoding(encoding);
+		        chain.doFilter(request, response); //다음 필터로 전달 , 서블릿 호출
+		        // chain.doFilter 이후에 코드를 작성하면
+		        System.out.println("서블릿 동작 이후에 할것");
+	            }
+            }   
+    
+        ```
+
+---
+### ❓ Interceptor
+- Interceptor란
+    - HandlerInterceptor를 구현한 것(또는 HandlerInterceptorAdapter를 상속한 것)
+    - 요청(requests)을 처리하는 과정에서 요청을 가로채서 처리
+    - 접근 제어(Auth), 로그(Log) 등 비즈니스 로직과 구분되는 반복적이고 부수적인 로직 처리
+    - HandlerIntercepter 주요 메서드
+        - preHandle()
+        - postHandle()
+        - afterCompletion()
+    
+- Interceptor 선언의 두 가지 방식 <br>
+    1. implements HandlerInterceptor -> 선호<br>
+    2. extends HandlerInterceptorAdapter (취소선이 그어져있어) : 지금은 괜찮아 -> 나중에는 없앨 수도 있어
+    
+- Interceptor의 xml 설정
+    - servlet-context.xml
+    ```xml
+    <interceptors>
+		<interceptor>
+			<mapping path="/*"/>
+			<beans:bean class="com.ssafy.mvc.interceptor.AInterceptor"/>
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/*"/>
+			<exclude-mapping path="/login"/>
+			<exclude-mapping path="/"/>
+			<beans:ref bean="confirm"/>
+		</interceptor>
+	</interceptors>
+    ```
+- Interceptor의 메서드
+
+    - preHandle
+        - Controller(핸들러) 실행 이전에 호출
+        - false를 반환하면 요청을 종료
+        ```java
+        @Override
+	    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        ```
+
+    - postHandle
+        - Controller(핸들러) 실행 후 호출
+        - 정상 실행 후 추가 기능 구현 시 사용
+        - Controller에서 예외 발생 시 해당 메서드는 실행되지 않음
+        ```java
+        @Override
+	    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        ```
+
+    - afterCompletion
+        - 뷰가 클라이언트에게 응답을 전송한 뒤 실행
+        - Controller에서 예외 발생시, 네번째 파라미터로 전달된다.(기본은 null)
+        - 따라서 Controller에서 발생한 예외 혹은 실행 시간 같은 것들을 기록하는 등 후처리 주로 사용.
+        ```java
+        @Override
+	    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        ```
+
+---
 
 # MyBatis - Dynamic SQL (1)
 

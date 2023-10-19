@@ -199,6 +199,108 @@ public class TestInterceptor implements HandlerInterceptor {
 
 # SPRING Interceptor (2)
 
+### 1. MyFilter와 MyFilter2는 순서대로 Mapping되어있다. 출력 순서는?
+
+```java
+public class MyFilter implements Filter {
+    public MyFilter() {}
+
+    public void init(FilterConfig fConfig) throws ServletException {}
+	public void destroy() {}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		System.out.println("A");
+		chain.doFilter(request, response);
+		System.out.println("B");
+	}
+}
+
+public class MyFilter2 implements Filter {
+    public MyFilter2() {}
+
+    public void init(FilterConfig fConfig) throws ServletException {}
+	public void destroy() {}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		System.out.println("C");
+		chain.doFilter(request, response);
+		System.out.println("D");
+	}
+}
+```
+
+### 2. doFilter 내에서 다음 필터가 존재하면 다음 필터를 호출하고 존재하지 않는다면 서블릿을 호출할 수 있게 해주는 것은?
+
+### 3. AInterceptor와 같은 형식으로 B,C 인터셉터가 있고 각 메서드에 아래와 같은 형식으로 들어있다. 출력 순서는?
+System.out.println("A : preHandle");<br>
+System.out.println("B : preHandle");<br>
+System.out.println("C : preHandle");<br>
+```java
+public class AInterceptor implements HandlerInterceptor{
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		System.out.println("A : preHandle");
+		return true;
+	}
+	
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+		System.out.println("A : postHandle");
+	}
+	
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+		System.out.println("A : afterCompletion");
+	}
+}
+```
+### 4. 인터셉터의 preHandle에서 false를 반환했다. 다음 동작으로 옳은 것?<br>
+    a. Controller 실행<br>
+    b. postHandle 호출<br>
+    c. afterCompletion 호출<br>
+    d. 요청 종료<br>
+
+### 5. Controller에서 예외 발생 시 다음 동작 옳은 것?<br>
+    a. 요청 종료<br>
+    b. afterCompletion 호출<br>
+    c. postHandle 호출<br>
+    d. preHandle 호출<br>
+
+### 6. 요청의 흐름이 다음과 같을 때 filter의 위치는?<br>
+    a 디스패처서블릿 b 인터셉터 c 컨트롤러 d 뷰<br>
+
+### 7. 인터셉터의 설정을 "/regist" 처리할 때 빈 칸 채우기
+    ```xml
+    <interceptors>
+		<interceptor>
+			<_______ path="_______"/>
+			<beans:ref bean="confirm"/>
+		</interceptor>
+	</interceptors>
+    
+    ```
+
+### 8. 인터셉터 설정 시 메인페이지("/")와 로그인페이지("/login")는 로그인을 하지 않아도 접속이 가능할 때 빈 칸 채우기
+    ```xml
+    	<interceptor>
+			<mapping path="/*"/>
+			<_______________ path="/login"/>
+			<_______________ path="/"/>
+			<beans:ref bean="confirm"/>
+		</interceptor>
+    
+    ```
+
+### 9. Listener 시작 메서드<br>
+    a. contextStarted
+    b. contextBegin
+    c. contextInitialized
+    d. contextRun
+
+### 10. 인터셉터에서 afterCompletion() 메서드의 용도 서술
+
+---
+
 # MyBatis - Dynamic SQL (1)
 
 
