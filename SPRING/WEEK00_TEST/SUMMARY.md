@@ -292,14 +292,14 @@ HandlerInterceptor[인터페이스]를 구현한 것(또는 HandlerInterceptorAd
   Controller 실행 이전에 호출
   false를 반환하면 요청을 종료한다.
   true를 반환하면 그대로 진행한다.
-  ```jsx
+  ```java
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) {}
   ```
 - postHandle()
   Controller 실행 후 호출
   정상 실행 후 추가 기능을 구현할 때 사용하기 때문에 ModelAndView 객체가 함께 들어있음
   Controller에서 예외 발생시 해당 메서드는 실행되지 않음
-  ```jsx
+  ```java
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object Handler, ModelAndView modelAndView)
   ```
 - afterCompletion()
