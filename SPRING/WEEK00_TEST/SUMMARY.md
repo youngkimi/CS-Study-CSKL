@@ -550,3 +550,106 @@ HandlerInterceptor[인터페이스]를 구현한 것(또는 HandlerInterceptorAd
 </details>
 
 # MyBatis - Dynamic SQL (2)
+
+## MyBatis
+
+### 개념
+- SQL 매핑 프레임워크
+- JDBC 사용 시의 불편한 점들 (util, try-catch, connection, Statement, ResultSet 등의 코드와 파라미터 설정, 결과 처리)을 대신 해준다.
+
+- XML 과 Annotation 설정으로 사용할 수 있다.
+
+### 구성
+- 설정 파일 (Configuration) : DB 접속, 모델 클래스, 매핑 정보 등 전반적 세팅.
+- **Mapper, Mapped Statement** : SQL문 정의 및 실행.
+- I/O (Parameter, Result) 
+    : Map / VO(Value Object) / Literal 전달.
+- 모든 myBatis 애플리케이션은 SqlSessionFactory 인스턴스 사용.
+- SqlSession 만드려면 SqlSessionFactory 세워야 한다. 
+
+- SqlSession은 SQL 명령어 실행 위한 메서드를 포함한다.
+- SqlSession 으로 interface를 읽어서 getMapper 등으로 구현체를 자동으로 만들어줌. 
+
+
+``` java
+// myBatis 설정파일
+// xml 형식 안에 TransactionManager, DataSource 등의 설정을 포함. 
+// db.properties 안에 mySQL 접속 설정 포함
+String resource = "config/mybatis-config.xml" 
+
+Reader reader = Resources.getResourceAsReader(resource);
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+```
+- myBatis-Spring 연동 모듈을 사용하면 SqlSessionFactory 직접 사용할 필요가 없다. https://mybatis.org/spring/ko/sqlsession.html
+
+
+
+## MyBatis-Spring
+- 위 DataSource와 sqlSessionFactory와 같이, myBatis 사용에 필요한 객체를 Spring Bean으로 등록하여 사용한다.
+
+- SqlSessionFactory에는 다음과 같은 정보가 작성된다.
+
+> 1. dataSource (DB 연결 정보)
+> 2. mapper들의 위치
+> 3. typeAlias들에 대한 정보.
+``` xml
+<bean id="sqlSessionFactory class="org.mybatis.spring.sqlSessionFactoryBean">
+    <!-- ref가 위에서 작성한 dataSource -->
+    <property name="dataSource" ref="dataSource/>
+    <property name="mapperLocations" value="classpath:dao/mapper/**/*.xml"/>
+    <property name="typeAliasesPackage" value="model"/>
+</bean>
+```
+
+## 동적 SQL
+- **Runtime** 시점에서 사용자의 입력 값에 따라 동적으로 SQL을 생성하여 실행하는 방식
+- MyBatis는 이를 편리하게 사용할 수 있게 도움을 준다. 
+- 종류
+> - if 
+> - choose(when, otherwise)
+> - trim (where, set) 쿼리문 위치에 문자열을 붙여주거나 삭제, 수정해줌.
+> - foreach
+
+- Value 하나면 ParameterType으로 mapper까지 전달
+- String 여러 개 한번에 넘기려면 Map이나 VO 클래스 작성해서 넘겨야 한다.
+- 근데 수업에서 parameterMap 권장하지 않는다고 하셨다네요. (곧 사라진다고)
+- 예시
+
+``` xml
+<select id="search" resultType="Board" parameter="SearchCondition>
+    -- SQL 문
+    -- view_cnt가 DB 내 속성. viewCnt가 나의 dto 내 속성.
+    -- 속성 명이 다르다면 맞춰줘야 한다. 
+    -- as로 맞춰주던가. resultMap으로 매핑해주던가
+    SELECT id, writer, content, title, view_cnt as viewCnt
+    FROM board
+    -- 조건문을 써보자.
+    <if test="key != 'none'">
+        WHERE ${key} LIKE concat('%', #{word}, '%')
+    <if test="orderBy != 'none'">
+        ORDER BY ${orderBy} ${orderByDir}
+    </if>
+</select>
+```
+
+- #{} 과 ${} 의 차이.
+> - #{} 는 Value를 "" 와 함께 가져온다. 
+> - \${} 는 Value 자체만 가져온다. 
+> - ${} 는 SQL 주입(injection) 공격의 위험이 있다. 
+> - 주입 공격은 SQL 코드를 주입해서 DB에서의 오작동을 유발하는 것
+> - https://youtu.be/FoZ2cucLiDs?si=YI0r9hc56VvsK-zQ
+
+#### Spring TX
+- 데이터 무결성을 위해서 사용
+- 스프링에서 제공하는 트랜잭션 기능을 활용할 수 있다.
+- transactionManager를 빈으로 등록해줘야 한다. 
+- 생성자에 dataSource를 같이 주입해준다. 
+``` xml
+<bean id="transactionManager"
+    class="org.springframwork.jdbc.datasource.DataSourceTransactionManager">
+    <constructor-arg ref="dataSource"> </constructor-arg>
+</bean>    
+>
+```
+- 메서드나 클래스에 @Transaction이 설정되어 있으면 AOP를 통해 트랜잭션 처리.
+- C U D 시에 사용한다. 
