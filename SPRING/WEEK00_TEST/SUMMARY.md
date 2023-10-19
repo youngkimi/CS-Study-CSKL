@@ -142,6 +142,221 @@ class Person{
 
 
 # MyBatis - Dynamic SQL (1)
+# Mybatis-Spring
+> 정의
+- 데이터베이스 연동을 위한 자바 퍼시스턴스 프레임워크 중 하나로, SQL 쿼리와 자바 객체 간의 매핑을 효율적으로 처리하기 위한 라이브러리
+- SQL, 동적 쿼리, 저장 프로시저 그리고 매핑을 지원하는 SQL Mapper이다.
+- JDBC로 처리하는 커넥션 코드 및 변수 등 중복 작업과 파라미터 설정 및 결과 처리를 대신해준다.
 
+> 특징
+- SQL쿼리들을 따로 XML파일로 작성하여 프로그램 코드와 SQL문을 코드관리 용이
+- 싱글톤 패턴으로 스프링 빈(bean)으로 등록하여 주입(DI)하여 쉽게 사용 가능
+- 스프링 연동 모듈을 제공해주기 때문에 스프링 설정이 간단함
+- 트랜잭션을 관리해주기 쉽게 설정이 가능함
+- JDBC와 차이점
+ <table border="1" text-align: center>
+	<th>JDBC</th>
+	<th>Mybatis</th>
+	<tr><!-- 첫번째 줄 시작 -->
+	    <td>직접 Connection을 맺고 마지막에 close()<br>
+        PreparedStatement 직접 생성 및 처리<br>
+        PreparedStatement의 setXXX() 등에 대한 모든 작업을 개발자가 처리<br>
+        SELECT의 경우 직접 ResultSet 처리</td>
+	    <td>자동으로 Connection close()기능<br>
+        MyBatis 내부적으로 PreparedStatement 처리<br>
+        #{prop}와 같이 속성을 지정하면 내부적으로 자동 처리<br>
+        리턴 타입을 지정하는 경우 자동으로 객체 생성 및 ResultSet 처리</td>
+	</tr><!-- 첫번째 줄 끝 -->
+    </table>
+
+> MyBatis의 DB Access Architecture
+
+![write_comment_640_row](https://terasolunaorg.github.io/guideline/5.2.1.RELEASE/en/_images/DataAccessMyBatis3Scope.png)
+- 기존 JDBC 프로그래밍의 경우 Repository에서 곧바로 JDBC API쪽으로 접근하여 DB를 연결하였지만, 위의 그림에 나와있듯이 Mybatis을 사용할 경우 Repository와 JDBC API사이에 MyBatis가 위치함으로써 편리한 Access를 제공한다.
+
+> MyBatis의 주요 컴포넌트
+- MyBatis 설정파일(mybatis-config.xml)
+  - DB의 접속 정보 또는 Mapping 파일의 경로, alias 등을 설정하는 XML 파일
+- SqlSessionFactoryBuilder
+  - MyBatis 설정파일을 읽고 SqlSessionFactory를 생성
+- SqlSessionFactory (Interface)
+  - SqlSession을 생성
+- <b>SqlSession (가장 핵심적인 역할)
+  - mapper.xml에 등록된 SQL의 실행이나 트랙잭션을 관리하는 인터페이스
+  - Spring 프로젝트의 DAO에 직접 접근하여 쿼리를 수행함
+  - Thread-safe 하지 않으므로 thread를 매번 필요에 따라 생성해야함</b>
+- Mapping 파일(mapper.xml)
+  - SQL과 객체 매핑설정을 하는 XML 파일
+
+> MyBatis의 DB Access 순서
+
+![write_comment_640_row](https://terasolunaorg.github.io/guideline/5.2.1.RELEASE/en/_images/DataAccessMyBatis3RelationshipOfComponents.png)
+
+#### ✔ 애플리케이션 실행시 시작되는 프로세스
+(1) 애플리케이션이 SqlSessionFactoryBuilder를 위해 SqlSessionFactory를 빌드하도록 요청<br>
+(2) SqlSessionFactoryBuilder는 SqlSessionFactory를 생성하기 위해 MyBatis 설정 파일을 읽음<br>
+(3) SqlSessionFactoryBuilder는 MyBatis 설정 파일의 정의에 따라 SqlSessionFactory를 생성
+
+#### ✔ 클라이언트의 요청에 따라 수행되는 프로세스
+(4) 클라이언트의 애플리케이션에 대한 요청<br>
+(5) 애플리케이션은 SqlSessionFactoryBuilder를 사용하여 빌드된 SqlSessioFactory에서 SqlSession을 가져옴<br>
+(6) SqlSessionFactory는 SqlSession 생성하고 이를 애플리케이션에 반환<br>
+(7) 애플리케이션이 SqlSession에서 Mapper Interface 구현 개체를 가져옴<br>
+(8) 애플리케이션에서 Mapper Interface의 메소드를 호출<br>
+(9) Mapper Interfcae의 구현 개체가 SqlSession메소드를 호출하고 SQL 실행 요청<br>
+(10) SqlSession은 Mapping File에서 실행할 SQL을 찾아서 실행
+
+
+
+#### ✔ 관련 라이브러리
+![write_comment_640_row](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbydUwL%2Fbtq8CK2IbCm%2FzEU5xqGcLVVmRKRKG9kWWk%2Fimg.png)
+
+- pom.xml
+  -  Maven 빌드 도구를 사용하는 Java 프로젝트의 설정 파일
+- applicationContext.xml
+  - Spring 애플리케이션의 일반적인 설정 파일로, 웹 애플리케이션 빈과 로직과 관련된 설정을 정의
+- root-context.xml
+  - 전역적인 애플리케이션 설정 정보를 정의
+  - web.xml 파일에서 가장 먼저 읽어들이는 설정 파일
+- servlet-context.xml
+  -  요청과 관련된 각각의 서블릿에 대한 설정 정보를 정의
+  -  url과 관련된 controller나, @(어노테이션), ViewResolver, Interceptor, MultipartResolver 등의 설정
+- xxMapper.xml
+  - 데이터베이스와 자바 객체 간의 매핑과 SQL 쿼리를 정의하는 역할을 함
+  - 각각의 매퍼 XML 파일은 특정 데이터베이스 테이블 또는 객체와 관련된 SQL 쿼리와 결과 매핑을 담당
+  -  보통 CRUD (Create, Read, Update, Delete) 연산과 관련된 SQL이 여기에 정의됨
+
+#### ✔ 관련 라이브러리 Code
+<details>
+  <summary>pom.xml</summary>
+  1) MyBatis / MyBatis-Spring : MyBatis와 스프링 연동용 라이브러리<br>
+  2) spring-jdbc / spring-tx : 스프링에서 데이터베이스 처리와 트랜잭션 처리
+
+* MyBatis를 사용하려면 4가지를 모두 추가해야함
+     <div markdown="1">
+
+    <!-- MyBatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.4.6</version>
+		</dependency>
+	<!--MyBatis-Spring-->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+    <!-- spring-tx -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>5.0.7.RELEASE</version>
+		</dependency>
+	<!-- spring-jdbc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>5.0.7.RELEASE</version>
+		</dependency>
+  </div>
+  </details>
+
+<details>
+  <summary>root-context.xml</summary>
+  <div markdown="1">
+
+    	<!-- sqlSessionFactory 추가 -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="domain이 있는 패키지" />
+        </bean>
+        <!-- mapper 자동 스캔 -->
+        <mybatis-spring:scan base-package="mapper가 있는 패키지" />
+  </div>
+  </details>
+
+<details>
+  <summary>applicationContext.xml</summary>
+  <div markdown="1">
+
+    	<!-- jdbc Driver 지정 -->
+        <bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName"
+			value="com.mysql.cj.jdbc.Driver"></property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/ssafydb?serverTimezone=UTC"></property>
+		<property name="username" value="ssafy"></property>
+		<property name="password" value="ssafy"></property>
+	</bean>
+
+    <!-- MyBatis를 사용하기 위한 sqlSessionFactory를 등록한다. -->
+	<bean id="sqlSessionFactory" 
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!--mapper.xml 파일의 경로를 ant 표현식의 상태로 사용 -->
+		<property name="mapperLocations" value="classpath*:mappers/**/*.xml"/>
+		<!-- mapper에서 사용할 DTO들의 기본 패키지를 등록 -->
+		<property name="typeAliasesPackage" value="com.ssafy.ws.model.dto"/>
+	</bean>
+
+    <!-- mybatis에서 제공하는 scan 태그를 통해 repository interface들의 위치를 지정한다. -->
+	<mybatis-spring:scan base-package="com.ssafy.ws.model.dao"/>
+
+  </div>
+  </details>
+
+
+## 동적 쿼리
+> 정의
+- 동적쿼리(Dynamic SQL) : 특정 조건에 따라 변경되는 쿼리
+  
+> 종류
+- if
+  - 'test'라는 속성과 함께 특정한 조건이 true가 되었을 때 포함된 SQL을 사용하고자 할 때 작성
+- choose, when, otherwise
+  - choose는 if와 달리 여러 상황들 중 하나의 상황에서만 동작한다.
+  - Java의 'switch-case' 구문이나 JSTL의 choose와 유사
+  - when 요소는 switch와 마찬가지로 여러 조건 중 해당하는 하나만 선택되며 먼저 서술되어있을 수록 우선 순위가 높다. 
+- trim, where, set
+  - where
+    - where 요소는 태그에 의해 컨텐츠가 리턴되면 단순히 "WHERE"를 추가하여 출력한다. 조건이 없는 경우 where는 생성되지 않는다.
+  - trim
+    - trim은 where절과 달리 where뿐만 아니라 여러 요소를 동적으로 생성할 때 사용 된다.
+    - SQL 쿼리의 시작, 끝 또는 어디든지 사용할 수 있다. 또한 불필요한 공백 문자도 제거할 수 있다.
+    - prefixOverride, suffixOverride, prefix, suffix 등이 있다.
+  - set
+    - 업데이트할 컬럼과 값을 지정하는 블록
+    - set 요소 내에는 if 요소가 포함되어 있고 각 if 요소는 해당 열의 값을 동적으로 저장한다.
+    - 각 if 요소에는 test 속성이 있으며, 이 속성은 해당 열이 업데이트되어야 하는지 여부를 판단하는 조건을 주는데 데 사용된다.
+- foreach
+  -  전달받은 collection 인자 값을 바탕으로 반복적인 쿼리문을 작성할 때 사용한다.
+  -  주로 데이터 타입이 같은 다수의 배열 데이터를 검색 조건에 반영해야할 때, OR 또는 IN절에 많이 사용
+
+  
+## 용어
+<details>
+  <summary>퍼시스턴트 프레임워크(Persistance Framework)</summary>
+     <div markdown="1">
+    <ul>
+      <li>퍼시스턴스 프레임워크는 데이터를 영구적으로 저장하고 관리하기 위한 소프트웨어 레이어</li>
+      <li>데이터베이스와 애플리케이션 코드 사이의 중복 작업을 최소화하며 개발자가 데이터베이스와의 상호작용을 추상화하고 단순화한다.</li>
+      <li>주요 퍼시스턴스 프레임워크에는 Hibernate, JPA, MyBatis 등이 있다.</li>
+    </ul>
+  </div>
+  </details>
+
+<details>
+  <summary>스레드 안전성(Thread-safe)</summary>
+   <div markdown="1">
+    <ul>
+      <li>멀티스레드 환경에서 객체가 올바르게 동작하는 능력</li>
+      <li>스레드 안전한 객체는 여러 스레드에서 동시에 사용되어도 문제가 발생하지 않는다. 하지만 SqlSession은 스레드 안전하지 않기 떄문에 여러 스레드에서 동시에 하나의 SqlSession 인스턴스를 공유하면 예기치 않은 동작이 발생할 수 있음을 의미</li>
+    </ul>
+  </div>
+  
+   
+</details>
 
 # MyBatis - Dynamic SQL (2)
