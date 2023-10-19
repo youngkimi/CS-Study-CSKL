@@ -140,6 +140,9 @@ class Person{
 
 # SPRING AOP
 
+![AOP_01](./assets/Spring_AOP_01.jpg) \
+![AOP_02](./assets/Spring_AOP_02.jpg) \
+
 # SPRING MVC
 
 # SPRING Interceptor (1)

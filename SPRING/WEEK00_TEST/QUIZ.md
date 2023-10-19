@@ -112,6 +112,7 @@ class Person {
     3. Spring AOP는 인터페이스를 구현한 클래스가 아닌 경우에는 CGLIB 프록시를 통해서 구현할 수 있다.
     4. Spring AOP를 구현하기 위해서는 AspectJ 라이브러리를 사용하여야 한다.
     5. Spring AOP는 일반적으로 런타임 시에 위빙을 수행한다.
+    6. Spring AOP에서 Bean으로 등록된 객체는 항상 Proxy 객체가 된다.
 
 #### 2️⃣ Spring AOP에서 Advice 타입은 5가지가 존재한다. 5가지의 Advice 타입을 쓰고, 각 타입이 어느 시점에서 적용되는지 작성하시오.
 
