@@ -287,3 +287,40 @@ WHERE 1=1
 
 
 # MyBatis - Dynamic SQL (2)
+#### 1️. Mapper.xml에 파라미터 표기 시 #{} 을 이용하는 것과 ${} 을 이용하는 것의 차이는 무엇인가?
+
+#### 2. DB에서 받아온 칼럼 명이 프로퍼티 명과 다른 경우에 어떻게 처리해야 하는가?
+
+#### 3. title이라는 조건이 주어지는지 여부를 확인하고, 주어진다면 해당 title을 포함하는 블로그를 검색하고 싶다. 알맞은 동적 쿼리를 작성하시오.
+```
+select id="findActiveBlogWithTitleLike"
+     resultType="Blog">
+  SELECT * FROM BLOG
+  WHERE state = ‘ACTIVE’
+  _____________________
+  _____________________
+  _____________________
+</select>
+```
+
+#### 4. 다음을 보고 Database의 정확한 속성명들과 User 클래스의 정확한 프로퍼티명을 유추하시오.
+```
+<resultMap id="userResultMap" type="User">
+  <id property="id" column="user_id" />
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
+</resultMap>
+```
+
+#### 5. typeAliases에 대해 옳지 않은 것은?
+1. typeAliases는 자바 타입에 대한 짧은 이름이다.
+2. 아래 코드로 domain에서 빈을 검색할 때, 애노테이션이 없으면 등록되지 않는다.
+```
+<typeAliases>
+  <package name="domain.blog"/>
+</typeAliases>
+```
+3. 공통 자바 타입을 위한 여러 내장 타입 별칭은 대소문자를 구별하지 않는다.
+4. @Alias 애노테이션을 사용한다면 애노테이션에서 지정한 값이 별칭으로 사용될 것이다. 
+
+#### 6. 데이터 무결성이 뭐임
