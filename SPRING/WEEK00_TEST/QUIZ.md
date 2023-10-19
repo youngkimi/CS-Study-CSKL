@@ -200,4 +200,89 @@ public class TestInterceptor implements HandlerInterceptor {
 
 # MyBatis - Dynamic SQL (1)
 
+
+### 1️⃣. MyBatis에서 동적 쿼리를 사용할 때, ${}와 #{}의 차이에 대해 서술하시오.
+
+### 2️⃣. MyBatis를 사용하기 위한 sqlSessionFactory를 등록하려고 한다. 해당 빈 칸을 작성하시오.
+
+```
+<!-- MyBatis를 사용하기 위한 sqlSessionFactory를 등록한다. -->
+	<bean id="sqlSessionFactory" 
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!--mapper.xml 파일의 경로를 ant 표현식의 상태로 사용 -->
+		<property name="____________" value="classpath*:mappers/**/*.xml"/>
+		<!-- mapper에서 사용할 DTO들의 기본 패키지를 등록 -->
+		<property name="____________" value="com.ssafy.ws.model.dto"/>
+	</bean>
+```
+
+### 3️⃣ JDBC를 사용하지 않고 MyBatis를 사용하였을 때 장점을 2가지 이상 서술하시오.
+
+### 4️⃣. 다음 중 SqlSession에 대한 설명으로 옳지 않은 것을 모두 고르시오.
+
+1. mapper.xml에 등록된 SQL의 실행이나 트랙잭션을 관리하는 인터페이스이다.
+2. Spring 프로젝트의 DTO에 직접 접근하여 쿼리를 수행한다.
+3. Thread-safe 하지 않으므로 thread를 매번 필요에 따라 생성한다.
+4. MyBatis 설정파일을 읽고 SqlSessionFactoryBuilder에 의해 생성된다.
+5. SqlSession은 Mapping File에서 실행할 SQL을 찾아서 실행한다.
+
+### 5️⃣. MyBatis에서 SQL 쿼리와 자바 객체 간의 매핑을 설정하는 파일은 무엇인가?
+
+1. mybatis-config.xml
+2. applicationContext.xml
+3. mapper.xml
+4. pom.xml
+5. servlet-context.xml
+
+
+
+### 6️⃣. 사용자 이름(name)을 바탕으로 검색하여 조회하려고 한다. 해당 빈칸을 작성하시오.
+
+```
+<select id="searchByName "___________="string"
+		__________="User">
+		SELECT *
+		FROM users WHERE ____________________________
+	</select>
+```
+
+### 7️⃣. MyBatis에서 동적 쿼리를 작성할 때 if, choose, when, otherwise 태그를 어떻게 활용하는지 설명하고, 각 태그의 역할에 대해 서술해주세요.
+
+### 8️⃣. MyBatis의 DB Access 순서에 대해 알맞게 정렬하시오.
+
+(5) 애플리케이션이 SqlSessionFactoryBuilder를 위해 SqlSessionFactory를 빌드하도록 요청<br>
+(2) SqlSessionFactoryBuilder는 SqlSessionFactory를 생성하기 위해 MyBatis 설정 파일을 읽음<br>
+(7) SqlSessionFactoryBuilder는 MyBatis 설정 파일의 정의에 따라 SqlSessionFactory를 생성<br>
+(1) 클라이언트의 애플리케이션에 대한 요청<br>
+(5) 애플리케이션은 SqlSessionFactoryBuilder를 사용하여 빌드된 SqlSessioFactory에서 SqlSession을 가져옴<br>
+(9) SqlSessionFactory는 SqlSession 생성하고 이를 애플리케이션에 반환<br>
+(4) 애플리케이션이 SqlSession에서 Mapper Interface 구현 개체를 가져옴<br>
+(6) 애플리케이션에서 Mapper Interface의 메소드를 호출<br>
+(3) Mapper Interfcae의 구현 개체가 SqlSession메소드를 호출하고 SQL 실행 요청<br>
+(8) SqlSession은 Mapping File에서 실행할 SQL을 찾아서 실행
+
+### 9️⃣. 동적쿼리의 trim에서 사용되는 prefix, prefixOverrides의 차이에 대해 서술하시오.
+
+### 🔟. 아래 상황에서 발생하는 문제점이 무엇인지 설명하고, 해결하기 위한 방법을 아는대로 서술하시오.
+
+```
+SELECT
+    member_id,
+    name,
+    city,
+    street,
+    zipcode
+FROM
+    member_table
+WHERE 1=1
+    <if test="member_id != null and member_id != ''">
+    	and member_id = #{member_id}
+    </if>
+    <if test="name != null and name != ''">
+    	and name = #{name}
+    </if>
+```
+
+
 # MyBatis - Dynamic SQL (2)
