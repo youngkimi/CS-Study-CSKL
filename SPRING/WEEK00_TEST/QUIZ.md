@@ -493,3 +493,27 @@ select id="findActiveBlogWithTitleLike"
 4. @Alias 애노테이션을 사용한다면 애노테이션에서 지정한 값이 별칭으로 사용될 것이다. 
 
 #### 6. 데이터 무결성이 뭐임
+
+
+#### 7. com.ssafy.model.dao.BoardDao에 위치한 인터페이스를 구현체 없이 매퍼와 연결하고 싶다. 빈칸 채워주세요.
+``` xml
+<mapper __________________________________>
+    <select id="getUser" resultType="User">
+        SELECT * FROM users
+    </select>
+</mapper>
+
+```
+
+#### 8. 프로젝트의 규모가 커져서 현수는 xml 방식으로 Bean을 등록하는 것이 너무 힘들다. 대신 어떠한 방식을 사용할 수 있는지와, 이때 사용해야 하는 어노테이션들을 작성하시오.
+
+#### 9.  CRUD 중 Transaction 처리가 필요한 기능과 필요하지 않은 기능은 무엇인가? 이유도 설명해주세요.
+
+#### 10. SearchCondition은 key (검색 기준), orderBy (정렬 기준), orderByDir(정렬방향) 의 프로퍼티를 가진다. key와 orderBy는 none 값과 DB 내 컬럼명을 속성으로 가진다. orderByDir는 내림차순("DESC"), 오름차순("ASC")을 속성으로 가진다. key나 orderBy가 none이 아닐 때 검색 기준을 포함하는지 검색하고 정렬 기준으로 정렬하는 동적 쿼리 함 짜보셈. 참고로 Board의 프로퍼티명은 id, writer, content, title, viewCnt. DB 내 board의 속성 명은 board_id, writer, content, title, view_cnt로 작성되어 있다. 
+
+
+``` xml
+<select id="search" resultType="Board" parameterType="SearchCondition>
+   
+</select>
+```

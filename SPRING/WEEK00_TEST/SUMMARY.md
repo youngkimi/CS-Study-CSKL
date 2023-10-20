@@ -873,7 +873,7 @@ HandlerInterceptor[인터페이스]를 구현한 것(또는 HandlerInterceptorAd
 ``` java
 // myBatis 설정파일
 // xml 형식 안에 TransactionManager, DataSource 등의 설정을 포함. 
-// db.properties 안에 mySQL 접속 설정 포함
+// db.properties 와 같은 mySQL 접속 설정 포함
 String resource = "config/mybatis-config.xml" 
 
 Reader reader = Resources.getResourceAsReader(resource);
@@ -911,11 +911,11 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reade
 
 - Value 하나면 ParameterType으로 mapper까지 전달
 - String 여러 개 한번에 넘기려면 Map이나 VO 클래스 작성해서 넘겨야 한다.
-- 근데 수업에서 parameterMap 권장하지 않는다고 하셨다네요. (곧 사라진다고)
+- 근데 수업에서 parameterMap 권장하지 않는다고 하셨다네요. (myBatis 오피셜, 곧 사라진다고)
 - 예시
 
 ``` xml
-<select id="search" resultType="Board" parameter="SearchCondition>
+<select id="search" resultType="Board" parameterType="SearchCondition>
     -- SQL 문
     -- view_cnt가 DB 내 속성. viewCnt가 나의 dto 내 속성.
     -- 속성 명이 다르다면 맞춰줘야 한다. 
