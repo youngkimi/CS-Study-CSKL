@@ -140,8 +140,104 @@ class Person{
 
 # SPRING AOP
 
-![AOP_01](./assets/Spring_AOP_01.jpg) \
+![AOP_01](./assets/Spring_AOP_01.jpg)
 ![AOP_02](./assets/Spring_AOP_02.jpg) \
+
+## Spring AOP 적용방식 - xml
+
+- xml방식과 annotation 방식 모두 spring에 내장돼있는 AspectJ 라이브러리를 활용한다.
+
+- Spring AOP는 인터페이스 또는 CGLIB 프록시를 통해 구현체를 만들어 구현하므로, 만든 구현체를 bean으로 등록하는 과정이 필요하다.
+
+- resources, application
+
+- bean으로 등록한 후, 어떤 pointcut에 대하여 AOP를 설정할지 결정하고, 등록한 bean에서 어느 advice 타입에 어느 메서드를 사용할지를 등록해주면 된다.
+
+```xml
+	<aop:config>
+		<aop:pointcut expression="execution(public * com.ssafy.aop.coding())" id="mypt"/>
+		<aop:aspect ref="myAspect">
+			<aop:before method="before" pointcut-ref="mypt"/>
+			<aop:after-returning method="afterReturning" pointcut-ref="mypt"/>
+			<aop:after-throwing method="afterThrowing" pointcut-ref="mypt" throwing="th"/>
+			<aop:after method="after" pointcut-ref="mypt"/>
+			<aop:around method="around" pointcut-ref="mypt"/>
+		</aop:aspect>
+	</aop:config>
+
+
+```
+
+## Spring AOP 적용방식 - annotation
+
+- 굳이 bean으로 등록하지 않고, AOP 구현체에 @Asepect를 붙이고, 각 메서드에 advice type을 annotation으로 적어주면 된다.
+
+```java
+package com.ssafy.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+@Component
+@Aspect
+//공통관심사항들을 작성할 클래스를 생성한다.
+public class MyAspect {
+	
+	//모든 반환 타입의 해당 패키지의 모든 클래스의 coding이라는 메서드가 등장할 때
+	@Pointcut("execution(public * com.ssafy.aop.*.coding())")
+	public void mypt() {
+		
+	}
+	
+	
+	
+	//실행 이전
+	public void before() {
+		System.out.println("컴퓨터를 부팅한다.");
+	}
+	
+	//실행 이후 (예외 없이)
+	public void afterReturning() {
+		System.out.println("Git에 Push 한다.");
+	}
+	
+	//예외 발생
+	public void afterThrowing(Throwable th) {
+		System.out.println("반차를 낸다.");
+		if(th instanceof OuchException) {
+			((OuchException)th).handleException();
+		}
+	}
+	
+	public void after() {
+		System.out.println("하루를 마무리 한다.");
+	}
+	
+	//////////////////////////////////////////// 이걸로 위의 것들을 모두 대체가능
+	
+	@Around("mypt()")
+	public void around(ProceedingJoinPoint pjt) {
+		this.before();
+		
+		try {
+			pjt.proceed();
+			this.afterReturning();
+		}catch (Throwable e) {
+			this.afterThrowing(e);
+		}finally {
+			this.after();
+		}
+		
+	
+	}
+	
+}
+
+```
+
 
 # SPRING MVC
 - Servlet API를 기반으로 구축된 웹 프레임워크
