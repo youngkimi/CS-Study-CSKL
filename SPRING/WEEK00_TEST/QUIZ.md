@@ -1,4 +1,4 @@
-# SPRING DI
+# SPRING DI(Dependency Injection) 🔆
 
 #### 1. Spring Framework의 특징 세 가지를 서술하시오.
 
@@ -43,7 +43,7 @@ public class Test{
 스프링에서 핵심적인 역할을 하는 객체를 ( A )이라고 하며, ( B )는  ( A )의 인스턴스화 조립, 관리의 역할, 사용 소멸에 대한 처리를 담당한다.
 ```
 
-#### 6. 위의 코드는 해당 Spring Container의 설정파일이다. 아래 코드에서 설정파일로 등록한 Bean을 불러오려고 한다. 자바 코드의 문제점을 파악하고 수정하시오.
+#### 6. 위의 코드는 해당 Spring Container의 설정파일이다. 아래 코드에서 설정파일로 등록한 Bean을 불러오려고 한다. 자바 코드의 문제점을 파악하고 수정하시오.🔆
 
 ```xml
 <beans>
@@ -106,7 +106,7 @@ class Person {
 
 # SPRING AOP
 
-#### 1️⃣ Spring AOP에 대한 설명으로 옳지 않은 것은?
+#### 1️⃣ Spring AOP에 대한 설명으로 옳지 않은 것은?🔆
     1. Spring AOP를 통해 실제 기능이 구현된 Target 객체를 호출하려고 하면, Target 객체가 호출되지 않는다.
     2. Spring AOP에서 Join Point는 일반적으로 메서드 실행시점이다.
     3. Spring AOP는 인터페이스를 구현한 클래스가 아닌 경우에는 CGLIB 프록시를 통해서 구현할 수 있다.
@@ -114,9 +114,9 @@ class Person {
     5. Spring AOP는 일반적으로 런타임 시에 위빙을 수행한다.
     6. Spring AOP에서 Bean으로 등록된 객체는 항상 Proxy 객체가 된다.
 
-#### 2️⃣ Spring AOP에서 Advice 타입은 5가지가 존재한다. 5가지의 Advice 타입을 쓰고, 각 타입이 어느 시점에서 적용되는지 작성하시오.
+#### 2️⃣ Spring AOP에서 Advice 타입은 5가지가 존재한다. 5가지의 Advice 타입을 쓰고, 각 타입이 어느 시점에서 적용되는지 작성하시오.🔆
 
-#### 3️⃣ com.xyz.service package 또는 그 하위 패키지에 선언된 모든 메서드를 실행하는 PointCut Expression으로 알맞은 것은?
+#### 3️⃣ com.xyz.service package 또는 그 하위 패키지에 선언된 모든 메서드를 실행하는 PointCut Expression으로 알맞은 것은?🔆🔆
     1. execution(public * *(..))
     2. execution(* set*(..))
     3. execution(* com.xyz.service.\*.\*(..))
