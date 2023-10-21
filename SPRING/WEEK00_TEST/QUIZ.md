@@ -156,7 +156,7 @@ h. ViewResolver에 의해서 실제 결과를 처리할 View를 결정하고 반
 4. handler mapping은 별도의 등록없이 사용가능하다.
 5. 정답없음
 
-#### 4️⃣ 다음 코드의 실행 결과로 test.jsp에 id와 pw를 첫째줄에 id의 값 두번째 줄에 pw의 값을 출력할때 알맞은 것은?
+#### 4️⃣ 다음 코드의 실행 결과로 알맞은 것은?
 url 정보
 ```
 ~/test?id=&pw=2
@@ -169,14 +169,17 @@ public String test1(Model model, @RequestParam(value="myid")Stirng id, String pw
     return "test";
 }
 ```
+test.jsp
+```
+${id}
+${pw}
+```
 1. 2
-2.  
-   2
-3. null
-   2
+2. &nbsp; 2
+3. null 2
 4. 에러 발생
 
-#### 5️⃣ 다음 코드의 실행 결과로 test.jsp에 id와 pw를 첫째줄에 id의 값 두번째 줄에 pw의 값을 출력할때 알맞은 것은?
+#### 5️⃣ 다음 코드의 실행 결과로 알맞은 것은?
 url 정보
 ```
 ~/test?id=&pw=2
@@ -189,18 +192,51 @@ public String test1(Model model, Stirng id, String pw){
     return "test";
 }
 ```
+test.jsp
+```
+${id}
+${pw}
+```
 1. 2
-2.  
-   2
-3. null
-   2
+2. &nbsp; 2
+3. null 2
 4. 에러 발생
 
-#### 6️⃣ 
-#### 7️⃣
-#### 8️⃣
-#### 9️⃣
-#### 🔟
+#### 6️⃣ 다음 중 root-context.xml에 설정해야 하는 것을 모두 고르시오.
+1. HandlerMapping
+2. viewResolver
+3. Service
+4. Controller
+5. Repositories
+
+#### 7️⃣ 3개의 @RequestMapping 방식의 차이점을 쓰시오.
+- @RequestMapping("test")
+- @RequestMapping(value="test", method = RequestMethod.GET)
+- @RequestMapping(value="test", method = RequestMethod.POST)
+
+#### 8️⃣ <a>태그를 눌렀을때 Controller에서 test1으로 forward하는 코드를 작성하시오.
+```
+<a href=test></a>
+```
+```
+@_________
+public String test(){
+    return ______;
+}
+```
+
+#### 9️⃣ <a>태그를 눌렀을때 Controller에서 test1으로 redirect하는 코드를 작성하시오.
+```
+<a href=test></a>
+```
+```
+@_________
+public String test(){
+    return ______;
+}
+```
+
+#### 🔟 Spring MVC에서 Controller란?
 
 # SPRING Interceptor (1)
 
