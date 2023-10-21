@@ -161,7 +161,8 @@ class Person{
 			<aop:after-returning method="afterReturning" pointcut-ref="mypt"/>
 			<aop:after-throwing method="afterThrowing" pointcut-ref="mypt" throwing="th"/>
 			<aop:after method="after" pointcut-ref="mypt"/>
-			<aop:around method="around" pointcut-ref="mypt"/>
+      <!-- 둘다있어도 작동엔 문제가 없다. -->
+			<!-- <aop:around method="around" pointcut-ref="mypt"/> -->
 		</aop:aspect>
 	</aop:config>
 
@@ -171,8 +172,69 @@ class Person{
 ## Spring AOP 적용방식 - annotation
 
 - 굳이 bean으로 등록하지 않고, AOP 구현체에 @Asepect를 붙이고, 각 메서드에 advice type을 annotation으로 적어주면 된다.
+```java
+package com.ssafy.aop;
+//before, after, after-returning, after-throwing를 이용할 경우
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+@Component
+@Aspect
+//공통관심사항들을 작성할 클래스를 생성한다.
+public class MyAspect2 {
+	
+	//모든 반환 타입의 해당 패키지의 모든 클래스의 coding이라는 메서드가 등장할 때
+	@Pointcut("execution(public * com.ssafy.aop.*.coding())")
+	public void mypt() {
+		
+	}
+	
+	
+	
+	//실행 이전
+	//제대로 붙었다면 화살표가 붙어야되는데
+	@Before("mypt()")
+	public void before() {
+		System.out.println("컴퓨터를 부팅한다.");
+	}
+	
+	//실행 이후 (예외 없이)
+	@AfterReturning("mypt()")
+	public void afterReturning() {
+		System.out.println("Git에 Push 한다.");
+	}
+	
+	//예외 발생
+	@AfterThrowing(value = "mypt()", throwing = "th")
+	public void afterThrowing(Throwable th) {
+		System.out.println("반차를 낸다.");
+		if(th instanceof OuchException) {
+			((OuchException)th).handleException();
+		}
+	}
+	
+	@After("mypt()")
+	public void after() {
+		System.out.println("하루를 마무리 한다.");
+	}
+
+}
+
+
+
+```
+
+
 
 ```java
+//around를 이용할 경우
 package com.ssafy.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
