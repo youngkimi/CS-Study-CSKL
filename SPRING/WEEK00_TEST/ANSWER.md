@@ -165,6 +165,43 @@ class Person {
 
 # SPRING MVC
 
+### 1️⃣ A : Model B : View C : Controller D : Servlet API
+
+### 2️⃣ a, e, b, f, d, h, g, c
+
+### 3️⃣ 5
+
+### 4️⃣ 4
+
+### 5️⃣ 1
+
+### 6️⃣ 3, 5
+
+### 7️⃣ 
+1. 요청을 GET과 POST방식으로 둘다 받을 수 있음
+2. GET요청만 받을 수 있음
+3. POST요청만 받을 수 있음
+
+### 8️⃣ 
+```
+@GetMapping("test")
+public String test(){
+    return "test1";
+}
+```
+
+### 9️⃣ 
+```
+@GetMapping("test")
+public String test(){
+    return "redirect:test1";
+}
+```
+
+### 🔟
+1. 모델과 뷰를 연결하는 역할을 수행
+2. 사용자에게 데이터를 가져오고 수정하고 제공
+
 # SPRING Interceptor (1)
 
 ### 1️⃣ FrontController라고도 하며 어떤 컨트롤러를 매핑할지 알려주는 것
