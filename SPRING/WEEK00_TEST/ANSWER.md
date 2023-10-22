@@ -227,5 +227,55 @@ public String test(){
 # SPRING Interceptor (2)
 
 # MyBatis - Dynamic SQL (1)
+### 1️⃣. MyBatis에서 동적 쿼리를 사용할 때, ${}와 #{}의 차이에 대해 서술하시오.
+#{}은 '' 콜른이 와서 String 형태로 들어온다. 예를들어 {user_id}의 user_id 값이 abc라면 쿼리문에는 USER_ID = 'abc'의 형태가 된다.
+<br>
+${}은 파라매터가 바로 출력되기 때문에 쿼리 주입을 예방할 수 없어 보안 측면에서 불리하다.
+따라서 사용자의 입력을 전달할 때는 사용하지 않는 편이다.
+
+
+### 2️⃣. MyBatis를 사용하기 위한 sqlSessionFactory를 등록하려고 한다. 해당 빈 칸을 작성하시오.
+mapperLocations, typeAliaesPackage
+
+
+### 3️⃣ JDBC를 사용하지 않고 MyBatis를 사용하였을 때 장점을 2가지 이상 서술하시오.
+1. 자동으로 Connection close()기능
+2. MyBatis 내부적으로 PreparedStatement 처리
+3. #{prop}와 같이 속성을 지정하면 내부적으로 자동 처리
+4. 리턴 타입을 지정하는 경우 자동으로 객체 생성 및 ResultSet 처리
+
+### 4️⃣. 다음 중 SqlSession에 대한 설명으로 옳지 않은 것을 모두 고르시오.
+2번 DTO가 아닌 DAO에 접근한다. <br>
+4번 SqlSessionFactoryBuilder가 아닌 SqlSessionFactory에 의해 생성된다.
+
+### 5️⃣. MyBatis에서 SQL 쿼리와 자바 객체 간의 매핑을 설정하는 파일은 무엇인가?
+3번 (mapper.xml)
+
+### 6️⃣. 사용자 이름(name)을 바탕으로 검색하여 조회하려고 한다. 해당 빈칸을 작성하시오.
+
+
+```
+<select id="searchByName "typeParameter="string"
+		resultParameter="User">
+		SELECT *
+		FROM users WHERE name LIKE
+		CONCAT('%',#{name},'%')
+	</select>
+```
+
+### 7️⃣. MyBatis에서 동적 쿼리를 작성할 때 if, choose, when, otherwise 태그를 어떻게 활용하는지 설명하고, 각 태그의 역할에 대해 서술해주세요.
+if, 조건문이 true가 되었을 때 포함된 SQL을 사용하고자 할 때 작성한다. <br>
+choose는 Java의 'switch-case와 비슷하며 when 요소의 여러 조건 중 하나일 때 실행되거나 모두 아닐 경우 otherwise에 의해 실행된다.
+
+### 8️⃣. MyBatis의 DB Access 순서에 대해 알맞게 정렬하시오.
+(5) - (2) - (7) - (1) - (5) - (9) - (4) - (6) - (3) - (8)
+
+### 9️⃣. 동적쿼리의 trim에서 사용되는 prefix, prefixOverrides의 차이에 대해 서술하시오.
+prefix: 접두어를 붙여주는 기능<br>
+prefixOverrides: trim태그 내부 실행될 쿼리문 가장 앞의 단어가 속성값에 설쟁해둔 문자와 동일할 경우 문자를 지움.
+
+### 🔟. 아래 상황에서 발생하는 문제점이 무엇인지 설명하고, 해결하기 위한 방법을 아는대로 서술하시오.
+사용자로부터 입력된 데이터가 직접 SQL 쿼리에 삽입되고 있으며, 이러한 데이터는 충분한 검증 없이 그대로 사용되기 때문에 SQL Injection 공격에 취약한 상태를 만들어준다. 따라서 해커가 악의적인 입력을 제공하여 데이터베이스를 침입하거나 손상시킬 수 있음.
+
 
 # MyBatis - Dynamic SQL (2)
