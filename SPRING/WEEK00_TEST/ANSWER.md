@@ -229,7 +229,7 @@ public String test(){
 
 ### 2️⃣ FilterChain
 
-### 3️⃣ A:preHandle, B:preHandle, C:preHandle, C:postHandle, B:postHandle, C:postHandle, C:afterCompletion, B:afterCompletion, A:afterCompletion
+### 3️⃣ A:preHandle, B:preHandle, C:preHandle, C:postHandle, B:postHandle, A:postHandle, C:afterCompletion, B:afterCompletion, A:afterCompletion
 
 ### 4️⃣ d
 
