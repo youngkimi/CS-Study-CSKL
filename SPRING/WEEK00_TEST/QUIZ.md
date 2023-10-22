@@ -119,8 +119,8 @@ class Person {
 #### 3️⃣ com.xyz.service package 또는 그 하위 패키지에 선언된 모든 메서드를 실행하는 PointCut Expression으로 알맞은 것은?🔆🔆
     1. execution(public * *(..))
     2. execution(* set*(..))
-    3. execution(* com.xyz.service.\*.\*(..))
-    4. execution(* com.xyz.service..\*.\*(..))
+    3. execution(* com.xyz.service.*.*(..))
+    4. execution(* com.xyz.service..*.*(..))
     5. within(com.xyz.service.*)
     6. execution(* com.xyz.service.MovieService.*(..))
 

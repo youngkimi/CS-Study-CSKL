@@ -151,7 +151,7 @@ class Person {
     - after : target 메서드 호출 이후 (try catch구문의 finally와 같은 시점)
     - after-returning : target 메서드가 정상적으로 동작 후(메서드의 return이 이루어진 이후)
     - after-throwing : target 메서드 실행 시 예외가 발생할 경우
-    - around : 적용될 시점을 위에 적은 4가지 시점 중 임의로 정할 수 있다.
+    - around : 
     - 참고 사항 : advice 적용 순서
         - around -> before -> after-returning/after-throwing -> after -> around
 
