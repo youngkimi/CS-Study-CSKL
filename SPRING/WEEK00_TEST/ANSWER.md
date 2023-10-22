@@ -304,7 +304,7 @@ prefixOverrides: trim태그 내부 실행될 쿼리문 가장 앞의 단어가 �
 2. DB에서 받아온 칼럼 명이 프로퍼티 명과 다른 경우에 어떻게 처리해야 하는가? <br>
 	resultMap을 이용하거나 as 를 사용하여 Dao로 전달하기 전에 칼럼 명을 프로퍼티 명으로 변환해주어야 한다.<br>
 3. title이라는 조건이 주어지는지 여부를 확인하고, 주어진다면 해당 title을 포함하는 블로그를 검색하고 싶다. 알맞은 동적 쿼리를 작성하시오.<br>
-```
+```java
 select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
@@ -331,7 +331,7 @@ User : id, username, password
     - 데이터베이스 내의 정확성, 일관성을 지키는 것.
     - 갱신 이상, 삭제 이상, 삽입 이상 등으로 인해 깨질 수 있다. 
 7. com.ssafy.model.dao.BoardDao에 위치한 인터페이스를 구현체 없이 매퍼와 연결하고 싶다. 빈칸 채워주세요.<br>
-```
+```java
 <mapper namespace="com.ssafy.model.dao.BoardDao">
     <select id="getUser" resultType="User">
         SELECT * FROM users
@@ -347,7 +347,7 @@ User : id, username, password
 
 10. SearchCondition은 key (검색 기준), orderBy (정렬 기준), orderByDir(정렬방향) 의 프로퍼티를 가진다. key와 orderBy는 none 값과 DB 내 컬럼명을 속성으로 가진다. orderByDir는 내림차순("DESC"), 오름차순("ASC")을 속성으로 가진다. key나 orderBy가 none이 아닐 때 검색 기준을 포함하는지 검색하고 정렬 기준으로 정렬하는 동적 쿼리 함 짜보셈. 참고로 Board의 프로퍼티명은 id, writer, content, title, viewCnt. DB 내 board의 속성 명은 board_id, writer, content, title, view_cnt로 작성되어 있다.
 
-```
+```java
 <select id="search" resultType="Board" parameterType="SearchCondition>
     Select board_id as id, writer, content, title, view_cnt as viewCnt
     FROM borad
