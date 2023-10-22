@@ -299,11 +299,12 @@ prefixOverrides: trim태그 내부 실행될 쿼리문 가장 앞의 단어가 �
 
 # MyBatis - Dynamic SQL (2)
 
-1️. Mapper.xml에 파라미터 표기 시 #{} 을 이용하는 것과 ${} 을 이용하는 것의 차이는 무엇인가?
-	#{} 는 parameter에 "" 을 붙여준다. ${} 는 parameter 내용 자체를 가져온다. ${} 사용 시 SQL 주입 공격에 취약해진다.
-2. DB에서 받아온 칼럼 명이 프로퍼티 명과 다른 경우에 어떻게 처리해야 하는가?
-	resultMap을 이용하거나 as 를 사용하여 Dao로 전달하기 전에 칼럼 명을 프로퍼티 명으로 변환해주어야 한다.
-3. title이라는 조건이 주어지는지 여부를 확인하고, 주어진다면 해당 title을 포함하는 블로그를 검색하고 싶다. 알맞은 동적 쿼리를 작성하시오.
+1️. Mapper.xml에 파라미터 표기 시 ```#{}``` 을 이용하는 것과 ```${}``` 을 이용하는 것의 차이는 무엇인가? <br>
+	```#{}``` 는 parameter에 \"\" 을 붙여준다. ```${}``` 는 parameter 내용 자체를 가져온다. ${} 사용 시 SQL 주입 공격에 취약해진다. <br>
+2. DB에서 받아온 칼럼 명이 프로퍼티 명과 다른 경우에 어떻게 처리해야 하는가? <br>
+	resultMap을 이용하거나 as 를 사용하여 Dao로 전달하기 전에 칼럼 명을 프로퍼티 명으로 변환해주어야 한다.<br>
+3. title이라는 조건이 주어지는지 여부를 확인하고, 주어진다면 해당 title을 포함하는 블로그를 검색하고 싶다. 알맞은 동적 쿼리를 작성하시오.<br>
+```
 select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
@@ -312,31 +313,41 @@ select id="findActiveBlogWithTitleLike"
     AND title like #{title}
   </if>
 </select>
+```
 4. 다음을 보고 Database의 정확한 속성명들과 User 클래스의 정확한 프로퍼티명을 유추하시오.
 DB : column_id, user_name, hashed_password
 User : id, username, password
 
-5. typeAliases에 대해 옳지 않은 것은?
-typeAliases는 자바 타입에 대한 짧은 이름이다.
-**아래 코드로 domain에서 빈을 검색할 때, 애노테이션이 없으면 등록되지 않는다.** <<<
+5. typeAliases에 대해 옳지 않은 것은? <br>
+- typeAliases는 자바 타입에 대한 짧은 이름이다. <br>
+- **아래 코드로 domain에서 빈을 검색할 때, 애노테이션이 없으면 등록되지 않는다.** <<<
 <typeAliases>
   <package name="domain.blog"/>
-</typeAliases>
-공통 자바 타입을 위한 여러 내장 타입 별칭은 대소문자를 구별하지 않는다.
-@Alias 애노테이션을 사용한다면 애노테이션에서 지정한 값이 별칭으로 사용될 것이다.
+</typeAliases> <br>
+
+- 공통 자바 타입을 위한 여러 내장 타입 별칭은 대소문자를 구별하지 않는다. <br>
+- @Alias 애노테이션을 사용한다면 애노테이션에서 지정한 값이 별칭으로 사용될 것이다.
 6. 데이터 무결성이 뭐임
-   
-7. com.ssafy.model.dao.BoardDao에 위치한 인터페이스를 구현체 없이 매퍼와 연결하고 싶다. 빈칸 채워주세요.
+    - 데이터베이스 내의 정확성, 일관성을 지키는 것.
+    - 갱신 이상, 삭제 이상, 삽입 이상 등으로 인해 깨질 수 있다. 
+7. com.ssafy.model.dao.BoardDao에 위치한 인터페이스를 구현체 없이 매퍼와 연결하고 싶다. 빈칸 채워주세요.<br>
+```
 <mapper namespace="com.ssafy.model.dao.BoardDao">
     <select id="getUser" resultType="User">
         SELECT * FROM users
     </select>
 </mapper>
-8. 프로젝트의 규모가 커져서 현수는 xml 방식으로 Bean을 등록하는 것이 너무 힘들다. 대신 어떠한 방식을 사용할 수 있는지와, 이때 사용해야 하는 어노테이션들을 작성하시오.
+```
+8. 프로젝트의 규모가 커져서 현수는 xml 방식으로 Bean을 등록하는 것이 너무 힘들다. 대신 어떠한 방식을 사용할 수 있는지와, 이때 사용해야 하는 어노테이션들을 작성하시오.<br>
    Java Configuration 파일로 작성. @Configuration @Bean
 9. CRUD 중 Transaction 처리가 필요한 기능과 필요하지 않은 기능은 무엇인가? 이유도 설명해주세요.
+```
    Read는 불필요. Transaction 처리는 데이터 삽입, 수정, 삭제(CUD) 등에 필요한 기능이다. (물론 Read에도 필요한 경우가 있음)
-19. SearchCondition은 key (검색 기준), orderBy (정렬 기준), orderByDir(정렬방향) 의 프로퍼티를 가진다. key와 orderBy는 none 값과 DB 내 컬럼명을 속성으로 가진다. orderByDir는 내림차순("DESC"), 오름차순("ASC")을 속성으로 가진다. key나 orderBy가 none이 아닐 때 검색 기준을 포함하는지 검색하고 정렬 기준으로 정렬하는 동적 쿼리 함 짜보셈. 참고로 Board의 프로퍼티명은 id, writer, content, title, viewCnt. DB 내 board의 속성 명은 board_id, writer, content, title, view_cnt로 작성되어 있다.
+```
+
+10. SearchCondition은 key (검색 기준), orderBy (정렬 기준), orderByDir(정렬방향) 의 프로퍼티를 가진다. key와 orderBy는 none 값과 DB 내 컬럼명을 속성으로 가진다. orderByDir는 내림차순("DESC"), 오름차순("ASC")을 속성으로 가진다. key나 orderBy가 none이 아닐 때 검색 기준을 포함하는지 검색하고 정렬 기준으로 정렬하는 동적 쿼리 함 짜보셈. 참고로 Board의 프로퍼티명은 id, writer, content, title, viewCnt. DB 내 board의 속성 명은 board_id, writer, content, title, view_cnt로 작성되어 있다.
+
+```
 <select id="search" resultType="Board" parameterType="SearchCondition>
     Select board_id as id, writer, content, title, view_cnt as viewCnt
     FROM borad
@@ -347,3 +358,4 @@ typeAliases는 자바 타입에 대한 짧은 이름이다.
     ORDER BY ${orderBy} ${orderByDir}
   </if>
 </select>
+```
