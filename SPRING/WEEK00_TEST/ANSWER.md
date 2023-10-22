@@ -225,6 +225,25 @@ public String test(){
 ### 🔟
 
 # SPRING Interceptor (2)
+### 1️⃣ A C D B
+
+### 2️⃣ FilterChain
+
+### 3️⃣ A:preHandle, B:preHandle, C:preHandle, C:postHandle, B:postHandle, C:postHandle, C:afterCompletion, B:afterCompletion, A:afterCompletion
+
+### 4️⃣ d
+
+### 5️⃣ b
+
+### 6️⃣ a
+
+### 7️⃣ mapping, /regist
+
+### 8️⃣ exclude-mapping
+
+### 9️⃣ c
+
+### 🔟 Controller에서 발생한 예외 혹은 실행 시간 같은 것들을 기록하는 등의 후처리로 주로 사용
 
 # MyBatis - Dynamic SQL (1)
 ### 1️⃣. MyBatis에서 동적 쿼리를 사용할 때, ${}와 #{}의 차이에 대해 서술하시오.
