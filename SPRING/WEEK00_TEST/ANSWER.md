@@ -1,4 +1,133 @@
 # SPRING DI(Dependency Injection) 🔆
+### 1️⃣. Spring Framework의 특징 세 가지를 서술하시오.
+(1) POJO 방식의 프레임워크<br>
+(2) 의존성 주입을 통한 객체 관계 구성<br>
+(3) 관점 지향 프로그래밍(AOP)
+
+### 2️⃣. POJO는 무엇의 약자인가?
+Plain Old Java Object
+
+### 3️⃣. A객체가 B 객체에 의존하다는 말이 어떤 것을 의미하는가?
+
+객체 A가 어떤 일을 처리하기 위해서 객체 B의 도움을 받아야만 할 때 객체 A가 B 객체에 의존한다고 말한다.
+
+### 4️⃣. 해당 코드에서 문제점을 파악하고 어떤 의존성을 제거해줘야 하는지 서술하시오.
+해당 코드는 현재 Person클래스가 Chicken 클래스에 의존성을 갖고 있다. Person클래스 내에서 객체가 생성되고 있기 때문에 객채 생성 의존성을 가지고 있다. 따라서 이를 제거하고 Test클래스에서 Chicken객체를 생성하고 만들어진 Chicken 인스턴스를 활용해서 Person 인스턴스를 만든다면 객체생성 의존성을 제거할 수 있다.
+
+### 5️⃣. A 와 B에 알맞은 단어를 작성하시오.
+```
+스프링에서 핵심적인 역할을 하는 객체를 ( A )이라고 하며, ( B )는  ( A )의 인스턴스화 조립, 관리의 역할, 사용 소멸에 대한 처리를 담당한다.
+```
+(A) - Bean <br>
+(B) - Container
+
+### 6️⃣. 위의 코드는 해당 Spring Container의 설정파일이다. 아래 코드에서 설정파일로 등록한 Bean을 불러오려고 한다. 자바 코드의 문제점을 파악하고 수정하시오.
+```xml
+<beans>
+	<bean class="com.ssafy.test.Programmer" id="programmer"></bean>
+</beans>
+```
+
+```java
+		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+		
+        Programmer p = context.getBean("programmer");	
+```
+
+### 수정 후
+
+```java
+		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+		
+        //첫번째 수정 방법
+		Programmer p = (Programmer)context.getBean("programmer");
+
+        //두번째 수정방법
+		Programmer p = context.getBean("programmer", Programmer.class);
+```
+
+### 7️⃣.  Bean에 정의할 수 있는 Scope 4가지를 작성하고, 각각의 Scope가 의미하는 것을 간략히 쓰시오.
+(1) singleton : 기본값. 단일 객체 인스턴스<br>
+(2) prototype : 빈을 요청할 때 마다 새로운 인스턴스 생성<br>
+(3) request : HTTP Request 주기로 bean 인스턴스 생성<br>
+(4) session : HTTP Session 주기로 bean 인스턴스 생성
+
+### 8️⃣. bean 등록시에 사용할 수 있는 다양한 속성들이 있다. 이 중에 constructor-arg, property 에 대해 설명하시오.
+
+constructor-arg는 생성자 주입시 활용하는 속성이고, property는 설정자 주입시 활용하는 속성이다.
+
+
+### 9️⃣. Sonata 객체를 Component scan을 통해 빈 등록하려고 한다. 이때 생성되는 빈의 이름은?
+sonata
+
+### 🔟. 아래 상황에서 발생하는 문제점이 무엇인지 설명하고, 해결하기 위한 방법을 아는대로 서술하시오.
+```java
+interface Food {
+    String getName();
+}
+
+@Component
+class Chicken implements Food{
+	public String getName() {
+		return "치킨";
+	}
+}
+@Component
+class Pizza implements Food{
+	public String getName() {
+		return "피자";
+	}
+
+}
+
+
+class Person {
+    Food food
+    public Person(){}
+
+    @Autowired
+    public void setFood(Food food){
+        this.food = food;
+    }
+}
+
+```
+
+Food의 구현체가 Chicken, Pizza로 두 가지 있는데 현재 모두 Component 어노테이션으로 빈이 등록된 상태이다. 하지만, Person 클래스에서 설정자 주입을 통해 Food의 의존성을 주입하려고 하는데, 두 가지 구현체 중에서 어떤 빈을 주입해야 하는지 알수 가 없으므로 문제가 생긴다. 따라서 @Qaulifer 어노테이션으로 주입할 빈을 명시해주거나, 주입하고 싶은 구현체에 @Primary어노테이션을 써서 가져올 빈을 명시해주어야 한다.
+
+```java
+interface Food {
+    String getName();
+}
+
+@Component
+@Primary //첫번째 방법
+class Chicken implements Food{
+	public String getName() {
+		return "치킨";
+	}
+}
+@Component
+class Pizza implements Food{
+	public String getName() {
+		return "피자";
+	}
+
+}
+
+
+class Person {
+    Food food
+    public Person(){}
+
+    @Autowired
+    //두번째 방법
+    public void setFood(@Qaulifier("chicken")Food food){
+        this.food = food;
+    }
+}
+
+```
 
 # SPRING AOP
 
