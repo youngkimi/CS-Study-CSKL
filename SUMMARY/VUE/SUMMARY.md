@@ -1,4 +1,4 @@
-# 💡 TOPIC 1 INTRO
+### 🔍# 💡 TOPIC 1 INTRO
 #### 김병현
 
 ### 🔍
@@ -270,7 +270,11 @@ component: () => import('../views/AboutView.vue')
 # 💡 TOPIC 7 상태관리
 #### 김영섭
 
-### 🔍
+### 🔍 상태관리 (State Management)
+- 상태(State) == 앱 구동에 필요한 Data
+- 뷰(View) == 상태 선언적 매핑, 시각화 (위에서 보여주는 template)
+- 기능(Action) == 사용자 Input에 따라 뷰에서 상태 변경. (function과 비슷)
+- Vue 컴포넌트는 이미 반응형 상태를 관리한다.
 
 ### 🔍
 
