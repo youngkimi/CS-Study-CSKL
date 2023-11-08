@@ -1,4 +1,5 @@
 ### 🔍# 💡 TOPIC 1 INTRO
+
 #### 김병현
 
 ### 🔍
@@ -10,17 +11,325 @@
 ### 🔍
 
 # 💡 TOPIC 2 Syntax1
+
 #### 김예림, 김병현
 
 ### 🔍
 
-### 🔍
+## Dynamically data binding(v-bind)
 
-### 🔍
+<aside>
+💡 하나 이상의 속성 또는 컴포넌트 데이터를 표현식에 동적으로 바인딩
 
-### 🔍
+</aside>
+
+### Attribute Bindings
+
+```html
+<img :src="imageSrc" />
+<a :href="myUrl">Move to Url</a>
+<p :[dynamicattr]="dynamicValue">동적 바인딩</p>
+**<!-- 여기서 :는 v-bind의 약어 -->**
+```
+
+✨ 대괄호 안에 작성하는 이름은 반드시 소문자로만 구성 가능
+
+(브라우저가 속성 이름을 소문자로 강제 변환)
+
+### Class and Style Bindings
+
+1. Binding HTML Classes
+
+   - 객체를 :class에 전달하여 클래스를 동적으로 전환할 수 있음
+
+   ```jsx
+   const isActive = ref(false);
+   // isActive 값에 따라 아래 class에 active의 추가 여부가 결정됨
+   ```
+
+   ```html
+   <div :class="{active: isActive}">Text</div>
+   ```
+
+   - 여러 클래스 전환
+
+   ```jsx
+   const isActive = ref(false);
+   const hasInfo = ref(true);
+   ```
+
+   ```html
+   <div class="static" :class="{active: isActive, 'text-primary': hasInfo }">
+     Text
+   </div>
+   ```
+
+   - 객체 방식
+
+   ```jsx
+   const isActive = ref(false);
+   const hasInfo = ref(true);
+
+   const classObj = ref({
+     active: isActive,
+     'text-primary': hasInfo,
+   });
+   ```
+
+   ```html
+   <div class="static" :class="classObj">Text</div>
+   ```
+
+   - 배열 바인딩
+
+   ```jsx
+   const activeClass = ref('active');
+   const infoClass = ref('text-primary');
+   ```
+
+   ```html
+   <div :class="[activeClass, infoClass]">Text</div>
+   ```
+
+   - 배열 + 객체
+
+   ```html
+   <div :class="[{active: isActive}, infoClass]">Text</div>
+   ```
+
+2. Binding Inline Styles
+
+   - inline-style 바인딩 (단, kebab-cased 문자열도 지원 → camelCase 권장)
+
+   ```jsx
+   const activeClass = ref('crimson');
+   const fontSize = ref(50);
+   ```
+
+   ```html
+   <div :style="{color: activeColor, fontSize: fontSize + 'px'}">Text</div>
+   <div :style="{'font-size': fontSize + 'px'}">Text</div>
+   ```
+
+   - Objects에 바인딩, 배열 바인딩 가능
+
+   ```jsx
+   const styleObj = ref({
+     color: activeColor,
+     fontSize: fontSize.value + 'px',
+   });
+   ```
+
+   ```html
+   <div :style="styleObj">Text</div>
+   <div :style="[styleObj, styleObj2]">Text</div>
+   <!-- 결과 -->
+   <div style="color: blue; font-size: 50px; border: 1px solid black;">
+     Text
+   </div>
+   ```
+
+## Event Handling (v-on)
+
+<aside>
+💡 DOM 요소에 이벤트 리스너를 연결 및 수신
+
+</aside>
+
+```jsx
+v-on:event="handler"
+=> @event="handler" // 약어
+```
+
+### Handler 종류
+
+1. Inline handlers: 이벤트가 트리거 될 때 실행 될 JS 코드
+
+   주로 간단한 상황에 사용
+
+   ```html
+   <button @click="count++">Add 1</button>
+   <p>Count: {{ count }}</p>
+   ```
+
+2. Method handlers: 컴포넌트에 정의될 메서드 이름
+
+   ✔️ 1번이 불가능한 대부분의 상황에서 사용
+
+   ✔️ Method Handlers를 트리거 하는 기본 DOM Event 객체를 자동을 수신
+
+   ```jsx
+   const myFunc = (event) => {
+     console.log(event);
+     console.log(event.currentTarget);
+     console.log(event.target.innerText);
+   };
+   ```
+
+   ```html
+   <p @click="myFunc">테스트</p>
+   ```
+
+   ![Untitled](../VUE/assets/test.png)
+
+   ✔️ 인자를 전달하여 메서드 호출도 가능
+
+   ```jsx
+   const myFunc = (message) => {
+     console.log(message);
+   };
+   ```
+
+   ```html
+   <p @click="myFunc('test')">테스트</p>
+   ```
+
+   ✔️ 인자와 이벤트 객체 모두 사용하고 싶다면 ? **($event 사용)**
+
+   ```jsx
+   const myFunc = (message, event) => {
+     console.log(message);
+     console.log(message);
+   };
+   ```
+
+   ```html
+   <p @click="myFunc('test', $event)">테스트</p>
+   ```
+
+### Event Modifiers
+
+.stop, .prevent, .self, .capture, .once, .passive
+
+```jsx
+<!-- 클릭 이벤트 전파가 중지됩니다. -->
+<a @click.stop="doThis"></a>
+
+<!-- submit 이벤트가 더 이상 페이지 리로드하지 않습니다. -->
+<form @submit.prevent="onSubmit"></form>
+
+<!-- 수식어를 연결할 수 있습니다. -->
+<a @click.stop.prevent="doThat"></a>
+
+<!-- 이벤트에 핸들러 없이 수식어만 사용할 수 있습니다. -->
+<form @submit.prevent></form>
+
+<!-- event.target이 엘리먼트 자신일 경우에만 핸들러가 실행됩니다. -->
+<!-- 예를 들어 자식 엘리먼트에서 클릭 액션이 있으면 핸들러가 실행되지 않습니다. -->
+<div @click.self="doThat">...</div>
+
+<!-- 이벤트 리스너를 추가할 때 캡처 모드 사용 -->
+<!-- 내부 엘리먼트에서 클릭 이벤트 핸들러가 실행되기 전에, 여기에서 먼저 핸들러가 실행됩니다. -->
+<div @click.capture="doThis">...</div>
+
+<!-- 클릭 이벤트는 단 한 번만 실행됩니다. -->
+<a @click.once="doThis"></a>
+
+<!-- 핸들러 내 `event.preventDefault()`가 포함되었더라도 -->
+<!-- 스크롤 이벤트의 기본 동작(스크롤)이 발생합니다.        -->
+<!-- 모바일 장치의 성능 향상을 위해 터치 이벤트 리스너와 함께 사용 -->
+<div @scroll.passive="onScroll">...</div>
+```
+
+```html
+<form @submit.prevent="onSubmit"></form>
+```
+
+**❌ 유의할 점**
+
+1. vue에서 v-on에 대한 Event Modifiers를 제공하기 때문에 event.preventDefault()와 같은 구문을 메서드에서 작성하지 말 것
+2. Modifiers는 chained 되게끔 작성할 수 있으며 작성된 순서로 실행되기 때문에 작성 순서에 유의할 것
+
+### Key Modifiers
+
+키보드 이벤트를 수신할 때 특정 키에 관한 별도 modifiers를 사용가능
+
+```html
+<input @keyup.enter="onSubmit" />
+```
+
+## Form Input Bindings
+
+form을 처리할 때 사용자가 input에 입력하는 값을 실시간으로 JavaScript 상태에 동기화 해야하는 경우 ⇒ **양방향 바인딩**
+
+### 1. v-bind와 v-on을 함께 사용
+
+@input과 :value를 함께 사용
+
+v-bind를 사용하여 input요소의 value 속성 값을 입력값으로 사용,
+
+v-on을 사용하여 input 이벤트가 발생할 때마다 input의 value 값을 별도 반응형 변수에 저장하는 핸들러 onInput을 호출
+
+```jsx
+const inputText1 = ref('');
+const **onInput** = (event) = {
+	inputText1.value = event.currentTarget.value;
+};
+```
+
+```html
+<p>{{ inputText1 }}</p>
+<input **:value="inputText1" @input="onInput" ** />
+```
+
+✨ IME(입력기)가 필요한 언어(한국어, 중국어, 일본어)의 경우 v-model이 제대로 업데이트 되지 않아서 v-bind와 v-on을 사용해야 함
+
+### 2. v-model 사용
+
+v-model을 사용하여 사용자 입력 데이터와 반응형 변수를 실시간 동기화
+
+```jsx
+const **inputText2** = ref('');
+```
+
+```html
+<p>{{ inputText2 }}</p>
+<input **v-model="inputText2" ** />
+```
+
+✔️ checkbox 활용했을 때
+
+1. 단일
+
+```html
+<input type="checkbox" id="checkbox" **v-model="checked" ** />
+<label for="checkbox">{{ checked }}</label>
+```
+
+1. 여러개 활용
+
+```jsx
+const checkedNames = ref([]);
+```
+
+```html
+<input type="checkbox" id="alice" value="Alice" **v-model="checkedNames" ** />
+<label for="alice">Alice</label>
+<input type="checkbox" id="bella" value="Bella" **v-model="checkedNames" ** />
+<label for="bella">Bella</label>
+```
+
+✔️ select 활용했을 때
+
+초기 값이 어떤 option과도 일치하지 않을 때, “선택되지 않은(unselected)”상태로 렌더링
+
+```jsx
+const selected = ref('');
+```
+
+```html
+<div>Selected: {{ selected }}</div>
+
+<select v-model="selected">
+  <option disabled value="">Please select one</option>
+  <option>Alice</option>
+  <option>Bella</option>
+  <option>Cathy</option>
+</select>
+```
 
 # 💡 TOPIC 3 Syntax2
+
 #### 석지명
 
 ### 🔍
@@ -32,6 +341,7 @@
 ### 🔍
 
 # 💡 TOPIC 4 SFC
+
 #### 김종인
 
 ## Single-File Components
@@ -152,6 +462,7 @@ div {
 위의 경우, MyComponent는 App.vue의 자식으로서 부모와 본인의 CSS 모두 영향을 받기 때문에 글자색이 red이다.
 
 # 💡 TOPIC 5 STATE
+
 #### 이승헌
 
 ### 🔍
@@ -163,6 +474,7 @@ div {
 ### 🔍
 
 # 💡 TOPIC 6 라우터
+
 #### 조현수
 
 ### 🔍 Routing
@@ -172,14 +484,15 @@ div {
 1. **SSR (Server Side Rendering)**
    - 서버에서 사용자에게 보여줄 페이지를 모두 구성하여 사용자에게 페이지를 보여주는 방식 (JSP, Servlet)
 2. **CSR (Client Side Rendering)**
-   - 처음 로드될때 전체 페이지를 다 받아온 후에,  클라이언트 측에서 필요한 컴포넌트를 랜더링 하는 방식. 즉 페이지는 한 개이지만 링크에 따라 여러 컴포넌트를 랜더링 하여 마치 여러 페이지를 사용하는 것처럼 구성한다. 
+   - 처음 로드될때 전체 페이지를 다 받아온 후에, 클라이언트 측에서 필요한 컴포넌트를 랜더링 하는 방식. 즉 페이지는 한 개이지만 링크에 따라 여러 컴포넌트를 랜더링 하여 마치 여러 페이지를 사용하는 것처럼 구성한다.
 3. **SPA ( Single Page Application)**
-    - 서버로부터 새로운 페이지를 불러오지 않고 페이지를 동적으로 불러와서 사용하는 웹어플리케이션
-
+   - 서버로부터 새로운 페이지를 불러오지 않고 페이지를 동적으로 불러와서 사용하는 웹어플리케이션
 
 ### 🔍 RouterLink
+
 - 페이지를 로드하지 않고 URL을 변경하는 로직 처리
 - HTML의 a태그를 렌더링
+
 ```html
 <template>
     <nav>
@@ -189,10 +502,12 @@ div {
 </template>
 
 ```
+
 ### 🔍 RouterView
+
 - URL에 해당하는 컴포넌트를 표시
 - 원하는 레이아웃에 배치
-- views폴더에  RouterView 위치에 렌더링 할 컴포넌트를 배치
+- views폴더에 RouterView 위치에 렌더링 할 컴포넌트를 배치
 - 일반 컴포넌트와 구분하기 위해 이름을 View로 끝나도록 작성
 
 ```html
@@ -214,39 +529,41 @@ div {
 
 </script>
 ```
-### 🔍 Router 활용
-### index.js
-```js
 
-import HomeView from '../views/HomeView.vue'
-import AboutView from '@/views/AboutView.vue'
-import UserView from '@/views/UserView.vue'
+### 🔍 Router 활용
+
+### index.js
+
+```js
+import HomeView from '../views/HomeView.vue';
+import AboutView from '@/views/AboutView.vue';
+import UserView from '@/views/UserView.vue';
 
 const router = createRouter({
-    routes: [
-        //HomeView
-        {
-            path: '/',
-            name: 'home',
-            component: HomeView
-        },
-        //AboutView
-        {
-            path: '/about',
-            name: 'about',
-            component: AboutView
-        },
-        //UserView - 동적 경로 매칭
-        {
-            path: '/user/:id', //매개변수 표시
-            name: 'user',
-            component: UserView
-        }
-    ]
-})
+  routes: [
+    //HomeView
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView,
+    },
+    //AboutView
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutView,
+    },
+    //UserView - 동적 경로 매칭
+    {
+      path: '/user/:id', //매개변수 표시
+      name: 'user',
+      component: UserView,
+    },
+  ],
+});
 ```
 
-###  UserView.vue
+### UserView.vue
 
 ```html
 <template>
@@ -276,11 +593,14 @@ const router = createRouter({
 </script>
 
 ```
+
 ### 🔍 프로그래밍 방식 네비게이션
-1. router.push()  -> 다른 위치로 이동
+
+1. router.push() -> 다른 위치로 이동
 2. router.replace() -> 현재 위치 바꾸기
 
 ### router.push()
+
 - 다른 URL로 이동
 - **새 항목을 history stack에 push하는 방식 -> 브라우저 뒤로가기 버튼 클릭시 이전 URL로 이동 가넝**
 - RouterLink 클릭할 때 내부적으로 호출되는 메서드이므로 동일한 방식
@@ -314,14 +634,15 @@ const router = createRouter({
 ```
 
 ### router.replace()
+
 - push 메서드와 달리 history stack에 새로운 항목을 push 하는 것이 아니라 다른 URL로 이동
 - **뒤로가기가 불가능**
-- 
-선언적 : `<RouterLink : to="" replace>`
+- 선언적 : `<RouterLink : to="" replace>`
 
 프로그래밍적: `router.replace(...)`
 
-### 🔍  Navigation Guard
+### 🔍 Navigation Guard
+
 Vue router를 통해 특정 URL에 접근할 때 다른 URL로 redirect를 하거나 취소하여 Navigation을 보호하는 역할
 ex. 인증 정보가 없으면 특정 페이지에 접근 불가능(약간 인터셉터 느낌)
 
@@ -335,34 +656,43 @@ ex. 인증 정보가 없으면 특정 페이지에 접근 불가능(약간 인�
    - 특정 컴포넌트에서만 동작
    - 컴포넌트 script에 정의
 
-
 ### Globally Guard
+
 1. router.beforeEach()
+
 - 다른 URL로 이동하기 직전에 실행
--  to : 이동할 정보가 담긴 Route 객체
--  from : 현재 URL 정보가 담긴 Route 객체
--  return false : 현재 네비게이션을 취소
--  return {name: 'About'} : router.push() 처럼 다른 위치로 redirect
--  return 이 없으면 'to' URL Route객체로 이동
--  index.js에 정의
+- to : 이동할 정보가 담긴 Route 객체
+- from : 현재 URL 정보가 담긴 Route 객체
+- return false : 현재 네비게이션을 취소
+- return {name: 'About'} : router.push() 처럼 다른 위치로 redirect
+- return 이 없으면 'to' URL Route객체로 이동
+- index.js에 정의
+
 ```js
 router.beforeEach((to, from) => {
-    //로직
-    return false
-})
+  //로직
+  return false;
+});
 ```
+
 ### Per-route Guard
+
 2. router.beforeEnter()
+
 - route에 진입했을 때만 실행되는 함수
 - 매개변수, 쿼리 값이 변경 될 때는 실행되지 않고, 다른 경로에서 탐색할 때만 실행
 - 함수의 to, from 선택 반환 인자는 beforeEach와 동일
 - routes 객체에 정의
 
 ### 컴포넌트 가드
+
 3. onBeforeRouteLeave
+
 - 현재 라우트에서 다른 라우트로 이동하기 전에 실행
 - 사용자가 현재 페이지를 떠나는 동작에 대한 로직을 처리
+
 4. onBeforeRouteUpdate
+
 - 이미 렌더링된 컴포넌트가 같은 라우트 내에서 업데이트 되기 전에 실행
 - 라우트 업데이트 시 추가적인 로직을 처리
 
@@ -373,13 +703,16 @@ path: '/about',
 name: 'about',
 component: () => import('../views/AboutView.vue')
 ```
+
 - 첫 빌드시 해당 컴포넌트를 로드하지 않고, 해당 경로를 처음 방문할 때만 컴포넌트를 로드
 - 앱을 빌드할 때 앱의 크기에 따라 페이지 로드 시간이 길어질 수 있기 때문에 활용
 
 # 💡 TOPIC 7 상태관리
+
 #### 김영섭
 
 ### 🔍 상태관리 (State Management)
+
 - 상태(State) == 앱 구동에 필요한 Data
 - 뷰(View) == 상태 선언적 매핑, 시각화 (위에서 보여주는 template)
 - 기능(Action) == 사용자 Input에 따라 뷰에서 상태 변경. (function과 비슷)
