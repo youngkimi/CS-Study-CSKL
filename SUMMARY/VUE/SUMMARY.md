@@ -345,25 +345,24 @@ const selected = ref('');
 #### 김종인
 
 ## Single-File Components
-- Component
-  - COmponent란 하나의 덩어리로서, 재사용 가능한 코드 블록을 의미한다.
+- **Component**
+  - Component란 하나의 덩어리로서, 재사용 가능한 코드 블록을 의미한다.
   - UI를 독립적이고 재사용 가능한 일부분으로 분할하고 각 부분을 개별적으로 다룰 수 있음. 이에 따라 앱은 자연스럽게 중첩된 Component의 트리로 구성된다.
-- Single-FIle Component (SFC)
+- **Single-FIle Component (SFC)**
   - 컴포넌트의 템플릿, 로직 및 스타일을 하나의 파일로 묶어낸 특수한 파일 형식 (*.vue 파일)
-  - HTML, CSS 및 JavaScript 3개를 하나로 합친 것
   - template에서 HTML을, scrpit에서 JS와 Vue 인스턴스를 style에서 CSS를 하나의 파일에서 컴포넌트의 뷰, 로직 및 스타일을 캡슐화하고 배치
 
 ### 🔍 Single-File Components 문법
-- 최상위 언어 블록
+- **최상위 언어 블록**
   - template, script, style이며 일반적으로 해당 순서로 작성
   -  *.vue 파일은 template, script setup의 경우 단 1개의 태그만 포함할 수 있지만 style의 경우 여러 태그가 포함될 수 있다.
-- template
+- **template**
   - 예를 들어, template 안에 div 태그가 2개 오는 경우가 있는데 현재 vue3 버전에서는 오류가 발생하지는 않지만 권장하지 않음. (vue2는 오류 발생)
   - template 태그는 렌더링 되지 않고 사라진다.
-- script setup
+- **script setup**
   - 컴포넌트의 setup() 함수로 사용되며 컴포넌트의 각 인스턴스에 대해 실행함
     - setup()을 통해서 return을 해주는 경우에서는 모든 코드에 대해 return을 작성하는 불편함이 있었다.
-- style scoped
+- **style scoped**
   - scoped가 지정되면 CSS는 현재 컴포넌트에만 적용 (scoped가 없다면 다른 컴포넌트에도 적용되므로 주의!)
 
 ## SFC build tool (Vite)
@@ -379,18 +378,18 @@ const selected = ref('');
   - NPM(Node Package Manager)을 활용해 수많은 오픈 소스 패키지와 라이브러리를 제공하여 개발자들이 손쉽게 코드를 공유하고 재사용할 수 있게 함
 
 ### 🔍 Vite 프로젝트 구조
-- node_modules
+- **node_modules**
   - 외부 패키지들이 저장되는 디렉토리
   - 프로젝트의 의존성 모듈을 저장하고 관리하는 공간
   - node_modules 파일은 .gitignore에 작성되기 때문에 공유가 되지 않는다.
-- package-lock.json
+- **package-lock.json**
   - node_modules에 들어있거나 해당 프로제트의 정보를 저장하는 파일
     - 예를 들어, 이전에 A라는 사람이 axios 1버전을 사용하여 작업했으나 이후에 B라는 사람이 axios 3버전을 이용해서 작업하면 버전이 달라 의존 관계 등 동작이 제대로 되지 않을 수 있는 현상을 방지한다.
     - 정확한 버전 보장, 일관성 있는 의존성 유지로 패키지 설치에 필요한 모든 정보를 포함
-- public 디렉토리
+- **public 디렉토리**
   - 정적 파일 위치 (참조되지 않는 소스 코드, 같은 이름을 갖고 import할 필요 없는 파일)
   - 항상 root 절대 경로를 사용하여 참조
-- src 디렉토리
+- **src 디렉토리**
   - 주요 소스 코드를 포함하는 곳
   - 컴포넌트, 스타일, 라우팅 등 프로젝트의 핵심 코드 관리
   - assets
@@ -413,13 +412,13 @@ const selected = ref('');
 ![DOM](./assets/DOM.png)
 
 ### 🔍 Virtual DOM의 장점
-- 효율성
+- **효율성**
   - 실제 DOM 조작을 최소화 하고, 변경된 부분만 업데이트 (성능 향상)
-- 반응성
+- **반응성**
   - 데이터의 변경을 감지(Watch, Computed), Virtual DOM을 효율적으로 갱신하여 UI를 자동으로 업데이트
     - Computed : 나와 직접적으로 관련되어 있는 것이 값이 변화가 생긴다면 바뀐 값으로 변화를 시켜주고 캐싱을 하고있다. (데이터가 바뀌지 않으면 이미 내가 저장한 값이 있으니 다시 계산을 하지 않음)
     - watch : 나와 직접적으로 관련되어 있거나 아닌 것들을 감시하
-- 추상화
+- **추상화**
   - 조작은 Vue가 개발자는 실제 DOM 조작만 진행
 
 ### 🔍 Virtual DOM 주의사항
@@ -427,9 +426,9 @@ const selected = ref('');
   - querySelector 대신 bind 또는 변수를 선언하거나 addEventListener 대신 v-on(@)을 통해 이벤트 감지한다.
 
 ### 🔍 Virtual DOM 주의사항
-- Composition API (규모가 있는 프로젝트) -> 권장
+- **Composition API** (규모가 있는 프로젝트) -> 권장
   - script setup 안에 한 곳에 변수나 메서드를 한 곳에서 모아서 사용
-- Option API (복잡성이 낮은 프로젝트)
+- **Option API** (복잡성이 낮은 프로젝트)
   - data 안에 변수 선언, methods 안에 메서드 선언, mounted를 통해 컴포넌트를 정의함
   - Option API의 경우에는 변수와 메서드가 분리되서 선언되기 때문에 코드가 길 경우에 해당 메서드의 변수가 어떤 것인지 확인하는데 어려움이 있다.
 
