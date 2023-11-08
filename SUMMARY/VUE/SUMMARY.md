@@ -716,10 +716,44 @@ component: () => import('../views/AboutView.vue')
 - 상태(State) == 앱 구동에 필요한 Data
 - 뷰(View) == 상태 선언적 매핑, 시각화 (위에서 보여주는 template)
 - 기능(Action) == 사용자 Input에 따라 뷰에서 상태 변경. (function과 비슷)
-- Vue 컴포넌트는 이미 반응형 상태를 관리한다.
+- Vue 컴포넌트는 이미 반응형 상태를 관리한다. (ref() ...)
 
-### 🔍
+<img src="assets/diagram_statemanagement.png"/>
 
-### 🔍
+- 기능(Action)은 상태(State)를 변경. 상태(State)는 뷰를 변경. 뷰는 기능(Action)을 변경하는 단방향 데이터흐름.
 
-### 🔍
+### 🔍 상태 관리의 단순성 붕괴
+- 프로젝트 사이즈가 커지고, 컴포넌트와 뷰 개수가 늘어나면 복잡.
+- 여러 컴포넌트가 나의 상태(State, Data)를 공유한다면?
+- 공유 상태를 공통 조상에 끌어올려서 Props 로 목적지까지 전달-전달
+- 혹은 서로 다른 뷰가 동일한 상태(State)를 변경해야 한다면?
+- 그럼 또 다른 뷰도 변경하고 동기화해줘야 한다.
+- 당연히 계층 구조가 깊어질수록 **몹시 비효율적**이다.
+- 유지 보수 관리 어렵
+
+### 🔍 해결책 
+- 전체 컴포넌트들의 공유 상태를 추출해서 전역에서 참조할 수 있는 저장소에 저장, 관리해야 한다.
+- 전체 컴포넌트 트리는 하나의 거대한 View가 된다. 계층 구조와 무관하게 State, Action을 사용할 수 있도록. 
+- 이를 위해서 Pinia를 사용한다.
+- 그렇다고 해서 모든 State와 Action을 Pinia가 전담하게 하면 안된다. 각 Data와 Func에 따라서 ...
+- (Action과 State를 Pinia Library가 대신 해준다. ~~귀엽다~~)
+<img src="assets/diagram_pinia.png"/>
+
+### 🔍 Pinia 
+- **Vue 공식 지원 저장소 라이브러리**
+- Pinia 구성요소 5가지
+    - Store : 중앙 저장소 
+        - 모든 컴포넌트가 공유하는 상태, 기능 작성
+        - **여러 개 만들 수 있다** 여러 JS 파일로
+    - State : 반응형 Data (ref()...)
+    - Getters : 계산된 값 (computed()...)
+        - store 속 state처럼 직접 접근이 가능하다.
+    - Setters : 메서드 (function()...)
+    - Plugin : 상태관리에 필요한 추가 기능 제공 모듈
+    - 중앙 저장소와 localStorage 일치시키는 플러그인을 수업에서 사용했었음.
+    - store 이름 작명시 prefix: use, suffix: Store로 작명해줄 것
+        - ex/ useCounterStore
+
+- Pinia 언제 사용해야 할까?
+    - Pinia 는 공유된 상태를 관리하는데 유용하지만, 시작 비용이 크다.
+    - Application이 단순하면 (계층 구조가 복잡하지 않다면) 없는 것이 더 효율적일 수 있음.
