@@ -445,13 +445,261 @@ const selected = ref('');
 
 #### 석지명
 
-### 🔍
+# Basic Syntax 2
 
-### 🔍
+## Computed vs Method vs Watch
 
-### 🔍
+#### Computed
 
-### 🔍
+- 계산된 속성을 정의하는 함수
+    - 미리 계산 => 캐싱 => 리렌더링 시 함수 재등록x
+    - 데이터 변환 자동 감지O, 종속된 데이터가 변경될 때만 함수를 실행
+    - 이벤트 함수 자리 X
+    - getter computed 함수는 반드시 값을 return
+
+#### Method
+
+- 일반적인 함수
+    - 리렌더링 시 재등록O (호출 시에만 실행)
+    - 데이터 변환 감지X
+    - 이벤트 함수 자리 O
+
+
+
+#### Watch
+    
+- 감시, 추적용
+    - 리렌더링 시 재등록O
+    - 데이터 변환 자동 감지O
+    - 이벤트 함수 자리 X
+    - 개발자가 코드 상에서 직접 해당 함수를 호출하는게 아니기 때문에, 호출된 return값을 
+    알 수도 없고 딱히 쓸 일도 없다.
+
+
+
+#### 어떻게 구분해서 사용해야 하나?
+
+
+❓ 컴포넌트가 리랜더링 될 때마다 함수가 등록되는가?
+
+method O / computed X / watch O
+
+❓ 특정한 값 data가 변환되는것을 감지 하는가?
+
+method X / computed O / watch O
+
+❓ 함수를 이벤트 함수 자리에 등록할 수 있는가?
+
+method O / computed X / watch X
+
+#### Computed vs Method
+
+- 접근 방식은 동일
+    - computed 속성은 종속 대상을 따라 저장(캐싱)된다
+    - 메소드는 호출하면 렌더링을 다시 할 때마다 항상 함수를 실행
+
+
+
+#### Computed vs Watch
+
+공통점 : 둘 다 데이터 값에 변경이 일어나는지 감시하고, 변경될 때마다 정의된 함수가 실행됨
+
+차이점 :
+
+Computed는 모든 변수를 감시할 수 있다
+Watch는 각 변수에 대한 result값을 일일이 찍어내야 한다.
+computed는 그럴 필요가 없이 그냥 묶어서 한줄컷 가능하므로, 반복되는 코드를 하나로 통합시킬 수 있다는 장점.
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        window.onload = function(){
+            var vm1 = new Vue({
+                el : '#test1',
+                data : {
+                    data1 : 'aaa',
+                    data2 : 'bbb',
+                    result1 : ''
+                },
+                watch : {
+                    data1 : function(){
+                        this.result1 = 'data1 : ' + this.data1 + ',data2 : ' + this.data2
+                        //어 그런데 data2는 계속 실시간으로 변경이 안되는 이유 무엇? : data2에 watch를 셋팅하지 않아서
+                    },
+                    data2 : function(){
+                        this.result1 = 'data1 : ' + this.data1 + ',data2 : ' + this.data2
+                    }
+                },
+                computed : {    //모든 변수를 감시 가능 - 반복된 코드를 하나로 통합가능
+                    result2 : function(){
+                        return 'data1 : ' + this.data1 + ', data2 : ' + this.data2
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <div id = 'test1'>
+        <input type = 'text' v-model = 'data1'/><br/>
+        <input type = 'text' v-model = 'data2'/><br/>
+        <h3>result1</h3>
+        <div>{{result1}}</div>
+        <h3>result2</h3>
+        <div>{{result2}}</div>
+    </div>
+</body>
+</html>
+```
+
+watch가 computed는 매우 비슷한 역할을 수행할 수 있지만, 사용되는 용도에 차이가 있다
+- computed : 이미 정의된 계산식에 따라 결과값을 반환할 때 사용
+    computed의 경우 종속관계가 복잡할 수록 재계산 시점을 예상하기 힘들기 떄문에 종속관계의 값으로 계산된 결과를 리턴하는 것 외의 사이드 이펙트가 일어나는 코드를 지양해야한다. HTTP 통신과 같이 컴퓨팅 리소스가 많이 필요한 로직을 정의X
+- watch : 어떤 특정 조건에서 함수를 실행시키기 위한 트리거로서 사용
+    - 상태 변경에 대한 반응으로 "사이드 이펙트"(예: DOM을 변경하거나 비동기 작업의 결과를 기반으로 다른 상태를 변경하는 것)를 수행할 때
+    - watch의 경우 데이터 변경의 응답으로 비동기식 계산이 필요한 경우나, 시간이 많이 소요되는 계산을 해야할 때 사용하는 것이 유용하며, 데이터 변경시 특정  특정 함수를 실행하는 트리거로 사용한다.
+
+<hr>
+
+#### 주의사항
+
+- computed의 반환값을 변경하면 안된다
+
+- computed 사용 시 원본 배열을 변경해서는 안된다
+    - 원본을 변경하면 데이터 변화를 감지할 수 없다 
+    
+
+## v-if vs v-show (Conditional Rendering)
+
+공통점 : 
+    - directive이므로 단일 요소에만 연결 가능 => 여러 요소에 쓰고 싶으면 상위 태그 만들어서 넣기
+    - 최상위 root에는 사용 불가
+
+- v-if : T/F 기반으로 요소를 조건부 렌더링(DOM 구조 변경)
+    - 처음에 조건에 맞는 것만 구성 => 초기 비용이 크지 않다
+    - 조건이 바뀌면 DOM 구조 자체를 변경 => 렌더링 비용이 크다
+        => 변경이 자주 일어나지 않는 곳(예시:로그인 상태 여부)에 사용
+
+- v-show : T/F 기반으로 요소의 가시성(visibility) 전환 (style값 변경)
+    - T/F에 관계없이 일단 DOM구성 => 초기 비용이 크다
+    - 값 변경시 style의 display 속성만 변경 => 렌더링 비용이 적다
+        => 변경이 자주 일어나는 곳에 적합
+
+
+## v-for (List Rendering)
+
+- 소스 데이터(Array, Object, number, string, Iterable)를 기반으로 요소 또는 템플릿 블록을 여러 번 렌더링
+    - alias(별칭) 제공 / 인덱스, 키 에 대한 별칭 지정 가능
+    - 여러 요소는 template 요소로 묶어서
+    - v-for 끼리 중첩 가능
+    - v-for는 반드시 key와 함께 사용
+        - 내부 컴포넌트의 상태를 일관되게 유지
+        - 데이터의 예측 가능한 행동을 유지
+
+        => Vue는 메모리를 최적화하기 위해 DOM을 재사용하므로
+        바뀌어야될 DOM부분만 처리한다. 만약에 랜더링한 배열의 순서가 바뀐다면,
+        변경된 부분에 대해서만 patch가 일어나므로, 랜더링한 배열의 순서가 새로운 배열의 순서대로 랜더링이 일어나지 않는다.
+        따라서 key와 v-for를 바인딩 해주어야 한다.
+
+    - 동일한 요소에 v-for와 v-if를 함께 사용하지 않는다
+        - 우선순위는 v-if가 v-for보다 높다 (예시)
+        - v-if 조건은 v-for범위의 변수에 접근할 수 없다.(우선순위)
+
+
+```javascript
+<template>
+    <ul>
+        <li v-for="todo in todos" v-if="todo.isComplete === true" : key="todo.id">
+            {{todo.name}}
+        </li>
+    </ul>
+</template>
+
+<script setup>
+let id = 0;
+
+const todos = ref([
+    {id: id++, name: '복습', isComplete:true},
+    {id: id++, name: '예습', isComplete:false},
+    {id: id++, name: '스터디', isComplete:true},
+    {id: id++, name: '알고리즘', isComplete:false},
+])
+</script>
+```
+
+## Lifecycle Hooks
+
+- Vue 인스턴스
+    - Vue를 구성하난 가장 기본적인 베이스이며 객체
+    - 라이프사이클을 시작점으로 여러 동작들의 초기화 작업을 수행
+
+- Vue 인스턴스의 생애주기 동안 특정 시점에 실행되는 함수
+- 개발자가 특정 단계에서 의도하는 로직이 실행될 수 있도록 함
+- Vue는 Lifecycle Hooks에 등록된 콜백 함수들을 인스턴스와 자동으로 연결함
+- Hooks 함수들은 반드시 동기적으로 작성
+- 인스턴스 생애 주기의 여러 단계에서 호출되는 다른 Hooks도 있다
+
+![ㅇ](https://ko.vuejs.org/assets/lifecycle.d3fe54ca.png)
+
+#### 종류
+- onMounted(() => { })
+
+```javascript
+import { onMounted } from 'vue'
+
+export default {
+  setup() {
+    // onMounted() 훅은 setup 함수 내에서 사용하는 경우에만
+    // 마치 외부의 함수를 호출한 것처럼 작성할 수 있습니다.
+    //
+    // 이렇게 작성된 onMounted() 훅은
+    // 컴포넌트가 마운트 된 이후 콜백 함수를 실행하지만
+    // `this`를 통해 컴포넌트 인스턴스에 접근할 수 없습니다.
+    onMounted(function() {
+      // `this`를 통해 컴포넌트 인스턴스에 접근할 수 없습니다.
+      console.log('onMounted가 호출 되었습니다:', this)
+    })
+  },
+
+  // 컴포넌트가 마운트 된 후,
+  // 옵션 API 방식의 mounted() 훅을 실행.
+  mounted() {
+    // `this`를 통해 컴포넌트 인스턴스에 접근할 수 있습니다.
+    console.log('mounted()가 호출 되었습니다:', this)
+  }
+}
+
+```
+
+
+- onUpdated(() => { })
+- onUnmounted(() => { })
+
+## Vue Style Guide
+
+- Vue 스타일 가이드 규칙 => 우선순위에 따라 4가지 범주
+    - A : 필수 / 오류 방지, 꼭 학습 및 준수
+        - v-for에 key 작성(또한 배열의 인덱스를 v-for의 key로 사용x)
+        - 동일 요소에 v-if 와 v-for를 함께 사용하지 않기
+    - B : 적극권장 / 가독성, 개발자 경험, 규칙 위반시 정당한 사유가 있어야
+    - C : 권장 / 일관성 보장용
+    - D : 주의 필요 / 잠재적 위험 특성을 고려
+
+- 원본 배열 수정 메서드
+    -push(), pop(), shift(), unshift(), splice(), sort(), reverse()
+
+- 복사 메서드
+    - filter(), concat(), slice()
+
+- v-for와 배열의 필터링/정렬결과 표시
+    -
+    -
+    -
 
 # 💡 TOPIC 4 SFC
 
