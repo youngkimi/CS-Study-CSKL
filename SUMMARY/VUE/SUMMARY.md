@@ -576,14 +576,181 @@ div {
 # 💡 TOPIC 5 STATE
 
 #### 이승헌
+## Component State Flow
+![state](./assets/state.png)
+- Passing Props : 부모 -> 자식 데이터 전달
+- Component Event(Emit Event) : 자식 -> 부모 응애 일어난 일 알림
+----
+### 🔍 1. Passing Props
+- Props : 부모 컴포넌트 -> 자식 컴포넌트 데이터를 전달하는데 사용되는 속성
 
-### 🔍
+- 모든 props는 자식 속성과 부모 속성 사이에 하향식 단방향 바인딩을 형성한다.(one-way-down binding)
+    - 하위 컴포넌트가 실수로 상위 컴포넌트의 상태를 변경하여 앱에서의 데이터 흐름을 이해하기 어렵게 만드는 것을 방지하기 위해 단방향 바인딩
+    - 하위에서 막 변경하면 데이터 꼬일까봐 막아둔거임
 
-### 🔍
+- 특징
+    - 부모 속성이 업데이트되면 자식으로 흐르지만 그 반대는 안됨
+        - 자식 컴포넌트 내부에서 props를 변경 시도해서는 안되며 불가능
 
-### 🔍
+    - 부모 컴포넌트가 업데이트 될 때마다 자식 컴포넌트의 모든 props가 최신 값으로 업데이트
+        - 부모 컴포넌트에서만 변경하고 이를 내려 받는 자식 컴포넌트는 자연스럽게 갱신
 
-### 🔍
+<br>
+
+- props 선언 방식
+    - 문자열 배열을 사용한 선언
+        - defineProps()를 사용하여 props 선언
+        ``` jsx
+        <!-- 자식 -->
+        defineProps(['myMsg'])
+        ```
+    - 객체를 사용한 선언(권장)
+        - 객체 선언 문법의 각 객체 속성의 키는 props의 이름이 되며, 객체 속성의 값이 될 데이터의 타입에 해당하는 생성자 함수(Number, String ..) 이어야함.
+        ```jsx
+        <!-- 자식 -->
+        defineProps({
+                        myMsg: String
+                    })
+        ```
+
+<br>
+
+- props 데이터 사용
+    - 템플릿에서 반응형 변수와 같은 방식
+    ```html
+    <!-- 자식 -->
+    <p>{{ myMsg }}</p>
+    ```
+    - props를 객체로 반환하므로 필요한 경우 JavaScript에서 접근 가능 ```console.log(props.myMsg)```
+
+<br>
+
+- Props Name Casing
+    - 선언 및 템플릿 참조 = camelCase
+    ``` html
+    <p>{{ myMsg }}</p>
+    ```
+    - 자식 컴포넌트 전달 = kebab-case
+    ```jsx
+    <ParentChild my-msg="message"/>
+    ```
+
+<br>
+
+- Static & Dynamic
+    - 변수 선언할 때 앞에 ref
+    ```jsx
+    <!-- 부모 -->
+    <script setup> 
+        import { ref } from 'vue'
+        const name = ref('영섭')
+    </script>
+    ```
+    - 전달 v-bind 사용 ( : )
+    ```html
+    <!-- 부모 -->
+    <!-- ParentChild에 message 보내기 -->
+    <ParentChild :my-msg="message">
+    ```  
+
+---
+
+
+### 🔍 2. Component Events
+
+- 자식이 Emit으로 발신, 부모가 v-on으로 수신
+- Emit event : 자식은 일어난 일을 부모에게 알려 부모가 prop데이터 변경하도록 요청
+- $emit()
+    - 자식 컴포넌트가 이벤트 발생시켜 부모 컴포넌트로 데이터 전달하는 역할
+    - '$'로 Vue 인스턴스나 컴포넌트 내에서 제공되는 전역 속성이나 메서드 식별
+    - $emit(event, ...args)
+
+<br>
+
+- 이벤트 발신 및 수신
+    1. 자식이 $emit으로 표현식에서 직접 발신(someEvent라는 사용자 정의 이벤트)
+    ```html
+    <!-- 자식 -->
+    <button @click="$emit('someEvent')">클릭</button>
+    ```
+    2. 부모가 v-on으로 이벤트 수신
+        - 수신 후 처리할 로직 및 콜백함수 호출(someEvent를 받아서 someCallback 호출)
+    ```html
+    <!-- 부모 -->
+    <ParentChild @some-event="someCallback" />
+    ```
+    ```jsx
+    <!-- 부모 -->
+    const someCallback = function () {
+        console.log('부모는 잘 받았다 자식아')
+    }
+    ```
+<br>
+
+- emit 이벤트 선언
+    - difineEmits()로 발신할 이벤트 선언
+    - script에서 $emit 메서드 접근 불가이기에 difineEmits()는 $emit 대신 사용할 동등한 함수 반환
+    ```html
+    <!-- 자식 -->
+    <button @click="buttonClick">클릭</button>
+    ```
+    ```jsx
+    <!-- 자식 -->
+    <script setup>
+    const emit = defineEmits(['someEvent'])
+
+    const buttonClick = function () {
+        emit('someEvent')
+    }
+    </script>
+    ```
+
+<br>
+
+- 이벤트 인자 전달
+    - 자식 발신
+    ```html
+    <!-- 자식 -->
+    <button @click="emitArgs">추가 인자 전달</button>
+    ```
+    ```jsx
+    <!-- 자식 -->
+    const emit = defineEmits(['emitArgs'])
+
+    const emitArgs = function () {
+        emit('emitArgs', 1, 2, 3)
+    }
+    ```
+    - 부모 수신
+    ```html
+    <!-- 부모 -->
+    <ParentChild @emit-args="getNumbers" />
+    ```
+    ```jsx
+    <!-- 부모 -->
+    const getNumbers = function (...args){
+        console.log(args)  // -> [1, 2, 3] 출력
+        console.log(`추가인자 ${args}를 수신`)  // 추가인자 1,2,3를 수신 출력
+    }
+    ```
+- Event Name Casing
+    - 선언 및 발신 -> camelCase
+    ```html
+    <!-- 자식 -->
+    <button @click="$emit('someEvent')">클릭</button>
+    ```
+    ```jsx
+    const emit = defineEmits(['someEvent'])
+
+    const buttonClick = function () {
+        emit('someEvent')
+    }
+    ```
+    - 부모가 수신 -> kebab-case
+    ```html
+    <ParentChild @some-event="..." />
+    ```
+----
 
 # 💡 TOPIC 6 라우터
 
