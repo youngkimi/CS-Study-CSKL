@@ -644,7 +644,7 @@ const todos = ref([
 - Hooks 함수들은 반드시 동기적으로 작성
 - 인스턴스 생애 주기의 여러 단계에서 호출되는 다른 Hooks도 있다
 
-![ㅇ](https://ko.vuejs.org/assets/lifecycle.d3fe54ca.png)
+<img src="https://ko.vuejs.org/assets/lifecycle.d3fe54ca.png" width="400" height="650"/>
 
 #### 종류
 - onMounted(() => { })
