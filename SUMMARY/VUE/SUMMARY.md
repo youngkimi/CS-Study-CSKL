@@ -2,19 +2,132 @@
 
 #### 김병현
 
-### 🔍
+### Single Page Application (SPA)
+- 페이지 한 개로 구성된 웹 어플리케이션
+- 서버로부터 필요한 모든 정적 HTML을 처음에 한번 가져옴
 
-### 🔍
+	ex 페이지 간 이동시, 페이지 갱신에 필요한 데이터만을 JSON으로 전달받아 페이지 일부 갱신
 
-### 🔍
+### Client-side Rendering (CSR)
+- 브라우저는 페이지에 필요한 최소한의 HTML 페이지와 JavaScript를 다운로드
+- JavaScript를 사용하여 DOM을 업데이트 하고 페이지를 렌더링
+	- DOM : 텍스트 파일로 만들어진 웹 문서를 브라우저가 이해할 수 있는 구조로 구성하여 메모리에 적재
 
-### 🔍
+#### CSR의 장점
+1. ***빠른 속도***
+	- 페이지의 일부를 렌더링하므로 다른 페이지로 이동하는 것이 빠름
+	- 서버로 전송되는 데이터의 양을 최소화
+2. 사용자 경험
+	- ***새로 고침이 발생 x***
+3. Front와 Back의 명확한 분리
+
+#### CSR의 단점
+1. ***초기 구동속도가 느림***
+	- JavaScript가 다운로드, 구문 분석 및 실행될 때까지 페이지가 완전히 렌더링 되지 않기 때문
+2. ***SEO(검색 엔지 최적화)***
+	- 페이지를 나중에 그려 나가는 것이기 때문에 검색에 잘 노출이 안됨
+
+## Vue.js
+
+### Vue의 2가지 핵심 기능
+1. 선언적 렌더링 (Declarative Rendering)
+	- ex : 태그 안에 `{{변수명}}`과 같은 구문을 선언
+2. 반응형 (Reactivity)
+	- JavaScript 상태 변경사항을 자동으로 추적하고 변경사항이 발생할 때 DOM을 효율적으로 업데이트
+
+### Vue를 사용하는 방법
+1. CDN 방식
+	- createApp을 통해 새로운 Application instance를 생성
+	- .mount()를 통해서 인스턴스를 연결
+	- ***mount()는 한 번만 호출할 수 있음***
+2. NPM 방식
+	- npm create vue@latest 방식
+
+### ref 함수
+- 반응형 상태를 선언하는 함수
+- 인자를 받아 .value 속성이 있는 ref 객체로 래핑하여 반환
+- ref로 선언된 변수의 값이 변경되면, 해당 값을 사용하는 템플릿에서 자동으로 업데이트
+- 인자는 어떠한 타입도 가능
+- 템플릿의 참조에 접근하려면 setup 함수에서 선언 및 반환 필요
+- 템플릿에서 ref를 사용할 때는 .value를 작성할 필요 없음
+
+### 템플릿 렌더링
+- Mustache syntax(콧수염 구문)를 사용하여 메시지 값을 기반으로 동적 텍스트를 렌더링
+- JavaScript 표현식을 사용할 수 있음
+	`<h1>{{message.split('').reverse().join('')}}</h1>`
+
+### 템플릿에서 unwrap
+- 템플릿에서의 unwrap은 ref가 최상위 속성인 경우에만 적용가능
+
+```
+      <div>{{object.id +1}}</div>			// [object Object]1
+      <div>{{object["id"]+1}}</div>			// [object Object]1
+      <div>{{object.id}}</div>				// 0
+      <div>{{object.id.value}}</div>		// 0
+      <div>{{object.id.value + 1}}</div>	// 1
+      <div>{{object["id"]}}</div>			// 0
+      <div>{{id}}</div>						// 0
+      <div>{{id+1}}</div>					// 1
+
+// 그냥 객체를 출력하면 [object Object]가 출력됨
+
+const object = { id: ref(0) };
+const { id } = object; //구조분해할당
+return { object, id };
+```
 
 # 💡 TOPIC 2 Syntax1
 
 #### 김예림, 김병현
 
-### 🔍
+## Template Syntax (종류)
+1. Text Interpolation <br>
+`<p>Message : {{msg}}</p>`
+	- 가장 기본적인 형태
+	- 콧수염 구문을 사용
+	- 해당 구성 요소 인스턴스의 msg 속성 값으로 대체
+	- msg 속성이 변경될 때마다 업데이트
+2. Raw HTML <br>
+HTML - `<div v-html="html"></div>` <br>
+Script - `const html = ref("<span>abcd</span>")`
+	- 콧수염 구문은 데이터를 일반 텍스트로 해석하기 때문에 실제 HTML을 출력하려면 v-html을 사용해야함.
+3. Attribute Bindings <br>
+HTML - `<div v-bind:id="dynamicId"></div>` <br>
+Script - `const dynamicId = ref('my-id')`
+	- 콧수염 구문은 HTML 속성 내에서 사용할 수 없기 때문에 v-bind를 사용
+	- 바인딩 값이 null이나 undefind인 경우 렌더링 요소가 제거
+4. JavaScript Expressions <br>
+`{{number + 1}}`, `{{ok ? 'YES' : 'NO'}}`, `<div :id="'list-${id}'"></div>` <br>
+	- Vue는 데이터 바인딩 내에서 JavaScript 표현식의 기능을 지원
+
+***주의 사항***
+- 각 바인딩에는 하나의 단일 표현식만 포함 (return 뒤에 사용할 수 있는 코드)
+
+- 작동하지 않는 경우 <br>
+	- 표현식이 아닌 선언식 : `{{const number = 1}}`
+	- 흐름제어도 작동 x : `{{ if (ok) { return message }}}`
+		- 삼항표현식을 사용함 : `{{ok ? message : false}}` 이건 가능
+
+### Directive
+- 'v-' 접두사가 있는 특수 속성
+
+`v-text` : `<div v-text="msg"></div>`
+
+`v-html` : html로 표시
+
+`v-show` : 보여줄지 말지
+
+`v-if`, `v-else`, `v-else-if` : if
+
+`v-for` : for
+
+`v-on` : 이벤트 핸들링 @와 같음
+
+`v-bind` : 속성값을 지정할 때 사용 :와 같음
+
+`v-model` : 쌍방향 데이터 바인딩을 만들때 사용
+
+`v-once` : 처음 한번만 렌더링하고 이후에는 안함
 
 ## Dynamically data binding(v-bind)
 
