@@ -15,6 +15,7 @@
     <td align="center"><a href="https://github.com/jseok0917"><img src="https://github.com/jseok0917.png" width="100px;" alt=""/><br /><sub><b>jseok0917</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/youngkimi"><img src="https://github.com/youngkimi.png" width="100px;" alt=""/><br /><sub><b>youngkimi</b></sub></a><br /></td>      
     <td align="center"><a href="https://github.com/heon118"><img src="https://github.com/heon118.png" width="100px;" alt=""/><br /.png><sub><b>heon118</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/lainlnya"><img src="https://github.com/lainlnya.png" width="100px;" alt=""/><br /.png><sub><b>heon118</b></sub></a><br /></td>
   </tr>
 </table>
 
@@ -22,8 +23,13 @@
 
 - DB : 데이터베이스의 원리와 응용 - [KOCW 백현미] / 데이터베이스 개론 [김연희]
 
-  - WEEK 00.
+  - WEEK 00. 학습 목표 및 진도 설정
   - WEEK 01.
+  - WEEK 02.
+ 
+- Operating System : 운영체제 - [KOCW 반효경] / OSTEP - three easy pieces [김연희]
+
+  - WEEK 01. ~ OSTEP 34강 / 운영체제 강의 7강(Deadlocks)
   - WEEK 02.
 
 - Network : 컴퓨터네트워크 - [KOCW 이석복] / 컴퓨터 네트워킹 하향식 접근 [James F. Kurose , Keith W.Ross]
