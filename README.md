@@ -29,8 +29,9 @@
  
 - Operating System : 운영체제 - [KOCW 반효경] / OSTEP - three easy pieces [김연희]
 
-  - WEEK 01. ~ OSTEP 34강 / 운영체제 강의 7강(Deadlocks)
-  - WEEK 02.
+  - WEEK 01. ~ 운영체제 강의 5강(CPU Scheduling) 
+  - WEEK 02. ~ 운영체제 강의 7강(Deadlocks)
+  - WEEK 03. ~
 
 - Network : 컴퓨터네트워크 - [KOCW 이석복] / 컴퓨터 네트워킹 하향식 접근 [James F. Kurose , Keith W.Ross]
 
