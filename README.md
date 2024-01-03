@@ -27,11 +27,12 @@
   - WEEK 01.
   - WEEK 02.
  
-- Operating System : 운영체제 - [KOCW 반효경] / OSTEP - three easy pieces [김연희]
+- Operating System : 운영체제 - [KOCW 반효경] / OSTEP - three easy pieces [Remzi Arpaci-Dusseau, Andrea Arpaci-Dusseau]
 
   - WEEK 01. ~ 운영체제 강의 5강(CPU Scheduling) 
   - WEEK 02. ~ 운영체제 강의 7강(Deadlocks)
-  - WEEK 03. ~
+  - WEEK 03. ~ 운영체제 강의 8강(Memory Management II)
+  - WEEK 04. ~ 운영체제 강의 11강(Disk Management & Scheduling)
 
 - Network : 컴퓨터네트워크 - [KOCW 이석복] / 컴퓨터 네트워킹 하향식 접근 [James F. Kurose , Keith W.Ross]
 
